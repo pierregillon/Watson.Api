@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Nancy.Configuration;
 using Nancy.ModelBinding;
 
 namespace fakenewsisor.server
@@ -16,24 +17,9 @@ namespace fakenewsisor.server
 
             Post("/", async parameters =>
             {
-                var command = this.Bind<CreateFalseInformationCommand>();
+                var command = this.Bind<ReportFalseInformationCommand>();
                 await dispatcher.Dispatch(command);
             });
         }
-    }
-
-    public class CreateFalseInformationCommand
-    {
-        public int siteId { get; set; }
-        public string text { get; internal set; }
-        public string firstTextNodeXPath { get; internal set; }
-        public string lastTextNodeXPath { get; internal set; }
-        public int offsetStart { get; internal set; }
-        public int offsetEnd { get; internal set; }
-    }
-
-    public interface ICommandDispatcher
-    {
-        Task Dispatch<T>(T command);
     }
 }
