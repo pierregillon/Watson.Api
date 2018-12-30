@@ -10,9 +10,9 @@ namespace fakenewsisor.server
             FalseInformationFinder falseInformationFinder,
             ICommandDispatcher dispatcher) : base("/api/falseinformation")
         {
-            Get("/{siteUrl}", async parameters =>
+            Get("/{webPageUrl}", async parameters =>
             {
-                return await falseInformationFinder.GetAll(parameters.siteUrl);
+                return await falseInformationFinder.GetAll(parameters.webPageUrl);
             });
 
             Post("/", async parameters =>

@@ -13,7 +13,13 @@ namespace fakenewsisor.server
 
         public async Task Handle(ReportFalseInformationCommand command)
         {
-            var website = await repository.Load(command.webPageId);
+            var webPage = await repository.Load(command.webPageUrl);
+            if (webPage != null)
+            {
+                var falseInformation = new FalseInformation { };
+                webPage.FalseInformations.Add(falseInformation);
+                await repository.Save(webPage);
+            }
         }
     }
 }

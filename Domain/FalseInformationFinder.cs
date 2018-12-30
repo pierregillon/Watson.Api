@@ -5,7 +5,7 @@ namespace fakenewsisor.server
 {
     public class FalseInformationFinder
     {
-        public async Task<IReadOnlyCollection<FalseInformationReadModel>> GetAll(string siteUrl)
+        public async Task<IReadOnlyCollection<FalseInformationReadModel>> GetAll(string webPageUrl)
         {
             await Task.Delay(0);
 

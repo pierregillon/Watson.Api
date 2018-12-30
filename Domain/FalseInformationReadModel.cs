@@ -1,8 +1,7 @@
 namespace fakenewsisor.server
 {
-    public class ReportFalseInformationCommand
+    public class FalseInformationReadModel
     {
-        public string webPageUrl { get; internal set; }
         public string text { get; internal set; }
         public string firstTextNodeXPath { get; internal set; }
         public string lastTextNodeXPath { get; internal set; }
