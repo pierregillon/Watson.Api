@@ -23,7 +23,7 @@ namespace fakenewsisor.server.DDD_CQRS.StructureMap
             }
             foreach (var handler in handlers)
             {
-                await handler.Handle(command);
+                await handler.HandleAsync(command);
             }
         }
 

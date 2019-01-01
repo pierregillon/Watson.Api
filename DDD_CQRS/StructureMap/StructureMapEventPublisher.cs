@@ -16,11 +16,11 @@ namespace fakenewsisor.server.DDD_CQRS.StructureMap
         public void Publish<T>(T @event) where T : Event
         {
             var listeners = _container.GetAllInstances<IEventListener<T>>();
-            ThreadPool.QueueUserWorkItem(async x =>
+            ThreadPool.QueueUserWorkItem(x =>
             {
                 foreach (var handler in listeners)
                 {
-                    await handler.On(@event);
+                    handler.On(@event);
                 }
             });
         }

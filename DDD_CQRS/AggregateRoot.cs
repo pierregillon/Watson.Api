@@ -7,7 +7,7 @@ namespace fakenewsisor.server.DDD_CQRS
     {
         private readonly List<Event> _changes = new List<Event>();
 
-        public abstract Guid Id { get; }
+        public abstract Guid Id { get; protected set; }
         public int Version { get; internal set; }
 
         public IEnumerable<Event> GetUncommittedChanges()
@@ -35,7 +35,7 @@ namespace fakenewsisor.server.DDD_CQRS
 
         private void ApplyChange(Event @event, bool isNew)
         {
-            ((dynamic)this).Apply(@event);
+            this.AsDynamic().Apply(@event);
             if (isNew)
             {
                 _changes.Add(@event);

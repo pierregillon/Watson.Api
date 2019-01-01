@@ -6,18 +6,32 @@ namespace fakenewsisor.server
 {
     public class WebPage : AggregateRoot
     {
-        public override Guid Id => Guid.NewGuid();
+        public override Guid Id { get; protected set; }
 
         private List<FalseInformation> _falseInformations = new List<FalseInformation>();
+
+        public WebPage()
+        {
+
+        }
+        public WebPage(string url) : this()
+        {
+            ApplyChange(new WebPageRegistered(Id, url));
+        }
 
         public void Report(FalseInformation falseInformation)
         {
             ApplyChange(new FalseInformationReported(falseInformation));
         }
 
-        public void Apply(FalseInformationReported falseInformationReported)
+        private void Apply(FalseInformationReported falseInformationReported)
         {
             _falseInformations.Add(falseInformationReported.FalseInformation);
+        }
+
+        private void Apply(WebPageRegistered @event)
+        {
+            Id = @event.Id;
         }
     }
 }

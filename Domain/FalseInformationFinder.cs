@@ -13,7 +13,7 @@ namespace fakenewsisor.server
             return Task.FromResult(_falseInformations).ContinueWith(x => (IReadOnlyCollection<FalseInformationReadModel>)x.Result);
         }
 
-        public async Task On(FalseInformationReported @event)
+        public void On(FalseInformationReported @event)
         {
             _falseInformations.Add(new FalseInformationReadModel
             {
@@ -23,8 +23,6 @@ namespace fakenewsisor.server
                 offsetEnd = @event.FalseInformation.SelectedTextEndOffset,
                 text = @event.FalseInformation.SelectedText
             });
-
-            await Task.Delay(0);
         }
     }
 }
