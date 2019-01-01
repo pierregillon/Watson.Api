@@ -1,23 +1,30 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using fakenewsisor.server.DDD_CQRS;
 
 namespace fakenewsisor.server
 {
-    public class FalseInformationFinder
+    public class FalseInformationFinder : IEventListener<FalseInformationReported>
     {
-        public async Task<IReadOnlyCollection<FalseInformationReadModel>> GetAll(string webPageUrl)
-        {
-            await Task.Delay(0);
+        private IList<FalseInformationReadModel> _falseInformations = new List<FalseInformationReadModel>();
 
-            return new List<FalseInformationReadModel> {
-                new FalseInformationReadModel {
-                    firstTextNodeXPath = "/html/body/p[1]/text()[1]",
-                    lastTextNodeXPath = "/html/body/p[1]/text()[1]",
-                    offsetStart = 55,
-                    offsetEnd = 165,
-                    text = ""
-                }
-            };
+        public Task<IReadOnlyCollection<FalseInformationReadModel>> GetAll(string webPageUrl)
+        {
+            return Task.FromResult(_falseInformations).ContinueWith(x => (IReadOnlyCollection<FalseInformationReadModel>)x.Result);
+        }
+
+        public async Task On(FalseInformationReported @event)
+        {
+            _falseInformations.Add(new FalseInformationReadModel
+            {
+                firstTextNodeXPath = @event.FalseInformation.FirstSelectedHtmlNodeXPath,
+                lastTextNodeXPath = @event.FalseInformation.LastSelectedHtmlNodeXPath,
+                offsetStart = @event.FalseInformation.SelectedTextStartOffset,
+                offsetEnd = @event.FalseInformation.SelectedTextEndOffset,
+                text = @event.FalseInformation.SelectedText
+            });
+
+            await Task.Delay(0);
         }
     }
 }

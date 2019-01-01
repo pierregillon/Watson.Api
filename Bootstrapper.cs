@@ -13,6 +13,10 @@ namespace fakenewsisor.server
             {
                 x.For<ICommandDispatcher>().Use<StructureMapCommandDispatcher>();
                 x.For<IEventPublisher>().Use<StructureMapEventPublisher>();
+
+                // The finder is in memory. It need to be a singleton
+                // to process events.
+                x.For<FalseInformationFinder>().Singleton();
             });
         }
     }
