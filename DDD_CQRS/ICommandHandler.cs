@@ -4,7 +4,7 @@ namespace fakenewsisor.server.DDD_CQRS
 {
     public interface ICommandHandler<in T>
     {
-        Task HandleAsync(T command);
+        Task Handle(T command);
     }
 
     public interface ICommandHandler<in TCommand, TResult>

@@ -21,20 +21,25 @@ namespace fakenewsisor.server.DDD_CQRS.StructureMap
             {
                 throw new Exception("No handlers found");
             }
-            foreach (var handler in handlers)
+            if (handlers.Count() > 1)
             {
-                await handler.HandleAsync(command);
+                throw new Exception("Only 1 handler required.");
             }
+            await handlers.Single().Handle(command);
         }
 
         public async Task<TResult> Dispatch<TCommand, TResult>(TCommand command)
         {
-            var handler = _container.GetInstance<ICommandHandler<TCommand, TResult>>();
-            if (handler == null)
+            var handlers = _container.GetAllInstances<ICommandHandler<TCommand, TResult>>();
+            if (handlers.Any() == false)
             {
                 throw new Exception("No handlers found");
             }
-            return await handler.Handle(command);
+            if (handlers.Count() > 1)
+            {
+                throw new Exception("Only 1 handler required.");
+            }
+            return await handlers.Single().Handle(command);
         }
     }
 }

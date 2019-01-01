@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using fakenewsisor.server.DDD_CQRS;
 using Nancy.Configuration;
@@ -10,23 +11,39 @@ namespace fakenewsisor.server
         public FalseInformationModule(
             WebPageFinder webPageFinder,
             FalseInformationFinder falseInformationFinder,
-            ICommandDispatcher dispatcher) : base("/api/falseinformation")
+            ICommandDispatcher dispatcher) : base()
         {
-            Get("/{webPageUrl}", async parameters =>
+            Get("/api/falseinformation", async parameters =>
             {
-                return await falseInformationFinder.GetAll(parameters.webPageUrl);
+                var webPageUrl = this.Request.Query["webPageUrl"];
+                if (webPageUrl != null)
+                {
+                    return await falseInformationFinder.GetAll(webPageUrl);
+                }
+                return null;
             });
 
-            Post("/{webPageUrl}", async parameters =>
+            Post("/api/falseinformation", async parameters =>
             {
-                var webPage = webPageFinder.SearchByUrl(parameters.webPageUrl);
+                var webPageUrl = this.Request.Query["webPageUrl"];
+                if (string.IsNullOrEmpty(webPageUrl))
+                {
+                    throw new Exception("webPageUrl must be specified");
+                }
+                Guid webPageId;
+                var webPage = webPageFinder.SearchByUrl(webPageUrl);
                 if (webPage == null)
                 {
-                    await dispatcher.Dispatch(new RegisterWebPageCommand(parameters.webPageUrl));
+                    webPageId = await dispatcher.Dispatch<RegisterWebPageCommand, Guid>(new RegisterWebPageCommand(webPageUrl));
+                }
+                else
+                {
+                    webPageId = webPage.Id;
                 }
                 var command = this.Bind<ReportFalseInformationCommand>();
-                command.webPageId = webPage.Id;
+                command.webPageId = webPageId;
                 await dispatcher.Dispatch(command);
+                return "ok";
             });
         }
     }

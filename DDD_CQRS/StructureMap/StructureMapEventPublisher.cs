@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading;
 using fakenewsisor.server.DDD_CQRS;
 using StructureMap;
@@ -13,16 +14,20 @@ namespace fakenewsisor.server.DDD_CQRS.StructureMap
             this._container = container;
         }
 
-        public void Publish<T>(T @event) where T : Event
+        public void Publish(Event @event)
         {
-            var listeners = _container.GetAllInstances<IEventListener<T>>();
+            var genericListenerType = typeof(IEventListener<>);
+            var listenerType = genericListenerType.MakeGenericType(@event.GetType());
+            var onMethod = listenerType.GetMethod("On");
+            var listeners = _container.GetAllInstances(listenerType);
             ThreadPool.QueueUserWorkItem(x =>
             {
                 foreach (var handler in listeners)
                 {
-                    handler.On(@event);
+                    onMethod.Invoke(handler, new object[] { @event });
                 }
             });
+
         }
     }
 }

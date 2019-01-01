@@ -16,12 +16,12 @@ namespace fakenewsisor.server
         }
         public WebPage(string url) : this()
         {
-            ApplyChange(new WebPageRegistered(Id, url));
+            ApplyChange(new WebPageRegistered(Guid.NewGuid(), url));
         }
 
         public void Report(FalseInformation falseInformation)
         {
-            ApplyChange(new FalseInformationReported(falseInformation));
+            ApplyChange(new FalseInformationReported(Id, falseInformation));
         }
 
         private void Apply(FalseInformationReported falseInformationReported)
