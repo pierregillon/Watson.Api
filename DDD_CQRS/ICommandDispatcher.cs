@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace fakenewsisor.server
+namespace fakenewsisor.server.DDD_CQRS
 {
     public interface ICommandDispatcher
     {

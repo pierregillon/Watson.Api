@@ -1,3 +1,5 @@
+using fakenewsisor.server.DDD_CQRS;
+using fakenewsisor.server.DDD_CQRS.StructureMap;
 using Nancy.Bootstrappers.StructureMap;
 using StructureMap;
 
@@ -10,7 +12,7 @@ namespace fakenewsisor.server
             container.Configure(x =>
             {
                 x.For<ICommandDispatcher>().Use<StructureMapCommandDispatcher>();
-                x.For<IEventEmitter>().Use<StructureMapEventEmitter>();
+                x.For<IEventPublisher>().Use<StructureMapEventPublisher>();
             });
         }
     }

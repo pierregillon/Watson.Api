@@ -1,23 +1,24 @@
 using System.Threading.Tasks;
+using fakenewsisor.server.DDD_CQRS;
 
 namespace fakenewsisor.server
 {
     public class ReportFalseInformationCommandHandler : ICommandHandler<ReportFalseInformationCommand>
     {
-        private readonly IWebPageRepository repository;
+        private readonly IRepository<WebPage> repository;
 
-        public ReportFalseInformationCommandHandler(IWebPageRepository repository)
+        public ReportFalseInformationCommandHandler(IRepository<WebPage> repository)
         {
             this.repository = repository;
         }
 
         public async Task Handle(ReportFalseInformationCommand command)
         {
-            var webPage = await repository.Load(command.webPageUrl);
+            var webPage = await repository.Load(command.webPageId);
             if (webPage != null)
             {
                 var falseInformation = new FalseInformation { };
-                webPage.FalseInformations.Add(falseInformation);
+                webPage.Report(falseInformation);
                 await repository.Save(webPage);
             }
         }

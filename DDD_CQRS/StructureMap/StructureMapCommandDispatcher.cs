@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using StructureMap;
 
-namespace fakenewsisor.server
+namespace fakenewsisor.server.DDD_CQRS.StructureMap
 {
     public class StructureMapCommandDispatcher : ICommandDispatcher
     {

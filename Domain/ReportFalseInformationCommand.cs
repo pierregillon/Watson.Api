@@ -1,7 +1,10 @@
+using System;
+
 namespace fakenewsisor.server
 {
     public class ReportFalseInformationCommand
     {
+        public Guid webPageId { get; set; }
         public string webPageUrl { get; internal set; }
         public string text { get; internal set; }
         public string firstTextNodeXPath { get; internal set; }
