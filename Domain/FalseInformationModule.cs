@@ -16,35 +16,32 @@ namespace fakenewsisor.server
             Get("/api/falseinformation", async parameters =>
             {
                 var webPageUrl = this.Request.Query["webPageUrl"];
-                if (webPageUrl != null)
-                {
-                    return await falseInformationFinder.GetAll(webPageUrl);
-                }
-                return null;
+                if (string.IsNullOrEmpty(webPageUrl))
+                    throw new Exception("webPageUrl must be specified");
+
+                return await falseInformationFinder.GetAll(webPageUrl);
             });
 
-            Post("/api/falseinformation", async parameters =>
+            base.Post("/api/falseinformation", async parameters =>
             {
                 var webPageUrl = this.Request.Query["webPageUrl"];
                 if (string.IsNullOrEmpty(webPageUrl))
-                {
                     throw new Exception("webPageUrl must be specified");
-                }
-                Guid webPageId;
-                var webPage = webPageFinder.SearchByUrl(webPageUrl);
-                if (webPage == null)
-                {
-                    webPageId = await dispatcher.Dispatch<RegisterWebPageCommand, Guid>(new RegisterWebPageCommand(webPageUrl));
-                }
-                else
-                {
-                    webPageId = webPage.Id;
-                }
+
                 var command = this.Bind<ReportFalseInformationCommand>();
-                command.webPageId = webPageId;
+                command.webPageId = await GetWebPageId(webPageFinder, dispatcher, webPageUrl);
                 await dispatcher.Dispatch(command);
-                return "ok";
+                return "created";
             });
+        }
+
+        private static async Task<Guid> GetWebPageId(WebPageFinder webPageFinder, ICommandDispatcher dispatcher, string webPageUrl)
+        {
+            var webPage = webPageFinder.SearchByUrl(webPageUrl);
+            if (webPage == null)
+                return await dispatcher.Dispatch<RegisterWebPageCommand, Guid>(new RegisterWebPageCommand(webPageUrl));
+            else
+                return webPage.Id;
         }
     }
 }
