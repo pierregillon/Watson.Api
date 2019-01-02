@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ddd-cqrs-library\try4real.csproj" />
+    <ProjectReference Include="..\..\ddd-cqrs-library\try4real.csproj" />
   </ItemGroup>
 
 </Project>
