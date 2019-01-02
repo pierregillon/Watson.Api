@@ -1,5 +1,6 @@
 using fakenewsisor.server.DDD_CQRS;
 using fakenewsisor.server.DDD_CQRS.StructureMap;
+using fakenewsisor.server.Infrastructure;
 using Nancy.Bootstrappers.StructureMap;
 using StructureMap;
 
@@ -15,6 +16,7 @@ namespace fakenewsisor.server
                 x.For<IEventPublisher>().Use<StructureMapEventPublisher>();
                 x.For<IEventStore>().Use<InMemoryEventStore>().Singleton();
                 x.For(typeof(IRepository<>)).Use(typeof(Repository<>));
+                x.For<IWebSiteChecker>().Use<HttpWebRequestChecker>();
                 x.For<InMemoryDatabase>().Singleton();
 
                 x.Scan(scanner =>

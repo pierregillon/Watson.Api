@@ -11,7 +11,6 @@ As a fact checker, I must be able to
 
 Technical :
 - Update hightlight style
-- Check website existence before adding a fact
 - Check existing fact at same location in document (Xmap) to be sure there is no conflict
 - Update highlight injection to not alter document structure display
 - Can not create a fact on multiple dom element (p)
