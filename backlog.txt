@@ -1,0 +1,18 @@
+Backlog of the community fact checker
+
+As a fact checker, I must be able to
+- Indicate investigating fact count in the present document
+- Add a opposing fact of another document to an existing fact
+- List all opposing fact of a fact
+- Vote for a fact : good, bad, not a fact
+- Vote for an opposing fact (greater, medium, low)
+- Qualify document (scientific, politic, non professional blog) to estimate quality and pertinence
+- Hide unimportant words in a fact, replaced by [...]
+
+Technical :
+- Update hightlight style
+- Check website existence before adding a fact
+- Check existing fact at same location in document (Xmap) to be sure there is no conflict
+- Update highlight injection to not alter document structure display
+- Can not create fact with more that X characters
+- Can not create a fact on multiple dom element (p)
