@@ -4,6 +4,6 @@ namespace fakenewsisor.server
 {
     public interface IWebSiteChecker
     {
-        Task CheckReachable(string documentUrl);
+        Task<bool> IsOnline(string documentUrl);
     }
 }

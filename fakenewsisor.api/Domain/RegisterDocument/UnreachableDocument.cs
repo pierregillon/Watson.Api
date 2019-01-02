@@ -3,9 +3,9 @@ using System.Runtime.Serialization;
 
 namespace fakenewsisor.server
 {
-    public class UnreachableDocument : Exception
+    public class UnreachableWebDocument : Exception
     {
-        public UnreachableDocument(string url) : base($"The web page '{url}' is unreachable.")
+        public UnreachableWebDocument(string url) : base($"The web page '{url}' is unreachable.")
         {
         }
     }

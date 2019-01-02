@@ -18,7 +18,8 @@ namespace fakenewsisor.server
 
         public async Task<Guid> Handle(RegisterDocumentCommand command)
         {
-            await webSiteChecker.CheckReachable(command.DocumentUrl);
+            if (await webSiteChecker.IsOnline(command.DocumentUrl) == false)
+                throw new UnreachableWebDocument(command.DocumentUrl);
 
             var document = new Document(command.DocumentUrl);
             await this.documentRepository.Save(document);

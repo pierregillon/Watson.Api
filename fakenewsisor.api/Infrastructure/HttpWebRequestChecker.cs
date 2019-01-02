@@ -6,7 +6,7 @@ namespace fakenewsisor.server.Infrastructure
 {
     public class HttpWebRequestChecker : IWebSiteChecker
     {
-        public async Task CheckReachable(string url)
+        public async Task<bool> IsOnline(string url)
         {
             var uri = new System.Uri(url);
             if (uri.IsAbsoluteUri == false)
@@ -16,12 +16,11 @@ namespace fakenewsisor.server.Infrastructure
             {
                 var request = (HttpWebRequest)WebRequest.Create(uri);
                 var response = (HttpWebResponse)await request.GetResponseAsync();
-                if (response.StatusCode != HttpStatusCode.OK)
-                    throw new UnreachableDocument(url);
+                return response.StatusCode == HttpStatusCode.OK;
             }
             catch (WebException)
             {
-                throw new UnreachableDocument(url);
+                return false;
             }
         }
     }
