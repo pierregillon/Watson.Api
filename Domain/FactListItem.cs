@@ -2,9 +2,9 @@ using System;
 
 namespace fakenewsisor.server
 {
-    public class ReportFalseInformationCommand
+    public class FactListItem
     {
-        public Guid webPageId { get; set; }
+        public string documentUrl { get; internal set; }
         public string text { get; internal set; }
         public string firstTextNodeXPath { get; internal set; }
         public string lastTextNodeXPath { get; internal set; }

@@ -2,7 +2,7 @@ using System;
 
 namespace fakenewsisor.server
 {
-    public class WebPageListItem
+    public class DocumentListItem
     {
         public Guid Id;
         public string Url;

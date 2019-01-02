@@ -16,3 +16,4 @@ Technical :
 - Update highlight injection to not alter document structure display
 - Can not create fact with more that X characters
 - Can not create a fact on multiple dom element (p)
+- Add domain id and not Guid.
