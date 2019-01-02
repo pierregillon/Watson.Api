@@ -22,7 +22,7 @@ namespace fakenewsisor.server
                 return await falseInformationFinder.GetAll(webPageUrl);
             });
 
-            base.Post("/api/falseinformation", async parameters =>
+            Post("/api/falseinformation", async parameters =>
             {
                 var webPageUrl = this.Request.Query["webPageUrl"];
                 if (string.IsNullOrEmpty(webPageUrl))

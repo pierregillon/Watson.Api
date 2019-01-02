@@ -15,19 +15,19 @@ namespace fakenewsisor.server
         public async Task Handle(ReportFalseInformationCommand command)
         {
             var webPage = await repository.Load(command.webPageId);
-            if (webPage != null)
+            if (webPage == null)
+                throw new WebPageNotFound($"Unable to load {command.webPageId}");
+
+            var falseInformation = new FalseInformation
             {
-                var falseInformation = new FalseInformation
-                {
-                    FirstSelectedHtmlNodeXPath = command.firstTextNodeXPath,
-                    LastSelectedHtmlNodeXPath = command.lastTextNodeXPath,
-                    SelectedTextStartOffset = command.offsetStart,
-                    SelectedTextEndOffset = command.offsetEnd,
-                    SelectedText = command.text
-                };
-                webPage.Report(falseInformation);
-                await repository.Save(webPage);
-            }
+                FirstSelectedHtmlNodeXPath = command.firstTextNodeXPath,
+                LastSelectedHtmlNodeXPath = command.lastTextNodeXPath,
+                SelectedTextStartOffset = command.offsetStart,
+                SelectedTextEndOffset = command.offsetEnd,
+                SelectedText = command.text
+            };
+            webPage.Report(falseInformation);
+            await repository.Save(webPage);
         }
     }
 }
