@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using fakenewsisor.server.DDD_CQRS;
+using try4real.ddd;
 
 namespace fakenewsisor.server
 {

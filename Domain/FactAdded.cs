@@ -1,5 +1,5 @@
 using System;
-using fakenewsisor.server.DDD_CQRS;
+using try4real.ddd;
 
 namespace fakenewsisor.server
 {

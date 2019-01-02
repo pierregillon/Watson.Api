@@ -1,8 +1,8 @@
 using System;
 using System.Threading.Tasks;
-using fakenewsisor.server.DDD_CQRS;
 using Nancy.Configuration;
 using Nancy.ModelBinding;
+using try4real.cqrs;
 
 namespace fakenewsisor.server
 {

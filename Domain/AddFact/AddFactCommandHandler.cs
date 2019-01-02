@@ -1,6 +1,7 @@
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
-using fakenewsisor.server.DDD_CQRS;
+using try4real.cqrs;
+using try4real.ddd;
 
 namespace fakenewsisor.server
 {

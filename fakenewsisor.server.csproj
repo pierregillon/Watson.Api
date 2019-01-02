@@ -12,4 +12,8 @@
     <PackageReference Include="Nancy.Bootstrappers.StructureMap" Version="2.0.0-clinteastwood" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ddd-cqrs-library\try4real.csproj" />
+  </ItemGroup>
+
 </Project>

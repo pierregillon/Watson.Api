@@ -1,8 +1,10 @@
-using fakenewsisor.server.DDD_CQRS;
-using fakenewsisor.server.DDD_CQRS.StructureMap;
 using fakenewsisor.server.Infrastructure;
 using Nancy.Bootstrappers.StructureMap;
 using StructureMap;
+using try4real.cqrs;
+using try4real.cqrs.structuremap;
+using try4real.ddd;
+using try4real.ddd.structuremap;
 
 namespace fakenewsisor.server
 {

@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using fakenewsisor.server.DDD_CQRS;
 using fakenewsisor.server.Infrastructure;
+using try4real.ddd;
 
 namespace fakenewsisor.server
 {
