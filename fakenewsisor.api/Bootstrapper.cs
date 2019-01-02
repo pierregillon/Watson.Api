@@ -23,19 +23,19 @@ namespace fakenewsisor.server
 
                 x.Scan(scanner =>
                 {
-                    scanner.AssemblyContainingType(typeof(ICommandHandler<>));
+                    scanner.AssemblyContainingType(typeof(Bootstrapper));
                     scanner.ConnectImplementationsToTypesClosing(typeof(ICommandHandler<>));
                 });
 
                 x.Scan(scanner =>
                 {
-                    scanner.AssemblyContainingType(typeof(ICommandHandler<,>));
+                    scanner.AssemblyContainingType(typeof(Bootstrapper));
                     scanner.ConnectImplementationsToTypesClosing(typeof(ICommandHandler<,>));
                 });
 
                 x.Scan(scanner =>
                 {
-                    scanner.AssemblyContainingType(typeof(IEventListener<>));
+                    scanner.AssemblyContainingType(typeof(Bootstrapper));
                     scanner.ConnectImplementationsToTypesClosing(typeof(IEventListener<>));
                 });
             });

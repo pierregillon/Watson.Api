@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "fakenewsisor.server", "fake
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "fakenewsisor.tests", "fakenewsisor.tests\fakenewsisor.tests.csproj", "{8576A411-7267-40B3-B02B-3B59ECEAF776}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "try4real", "ddd-cqrs-library\try4real.csproj", "{F13BA604-68DE-47ED-98D8-E6B50279F8EA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,5 +46,17 @@ Global
 		{8576A411-7267-40B3-B02B-3B59ECEAF776}.Release|x64.Build.0 = Release|Any CPU
 		{8576A411-7267-40B3-B02B-3B59ECEAF776}.Release|x86.ActiveCfg = Release|Any CPU
 		{8576A411-7267-40B3-B02B-3B59ECEAF776}.Release|x86.Build.0 = Release|Any CPU
+		{F13BA604-68DE-47ED-98D8-E6B50279F8EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F13BA604-68DE-47ED-98D8-E6B50279F8EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F13BA604-68DE-47ED-98D8-E6B50279F8EA}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{F13BA604-68DE-47ED-98D8-E6B50279F8EA}.Debug|x64.Build.0 = Debug|Any CPU
+		{F13BA604-68DE-47ED-98D8-E6B50279F8EA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F13BA604-68DE-47ED-98D8-E6B50279F8EA}.Debug|x86.Build.0 = Debug|Any CPU
+		{F13BA604-68DE-47ED-98D8-E6B50279F8EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F13BA604-68DE-47ED-98D8-E6B50279F8EA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F13BA604-68DE-47ED-98D8-E6B50279F8EA}.Release|x64.ActiveCfg = Release|Any CPU
+		{F13BA604-68DE-47ED-98D8-E6B50279F8EA}.Release|x64.Build.0 = Release|Any CPU
+		{F13BA604-68DE-47ED-98D8-E6B50279F8EA}.Release|x86.ActiveCfg = Release|Any CPU
+		{F13BA604-68DE-47ED-98D8-E6B50279F8EA}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
