@@ -1,3 +1,4 @@
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using fakenewsisor.server.DDD_CQRS;
 
@@ -16,7 +17,11 @@ namespace fakenewsisor.server
         {
             var document = await documentRepository.Load(command.documentId);
             if (document == null)
+            {
                 throw new DocumentNotFound($"Unable to load {command.documentId}");
+            }
+
+            CheckCommand(command);
 
             var fact = new Fact
             {
@@ -31,6 +36,24 @@ namespace fakenewsisor.server
             };
             document.Add(fact);
             await documentRepository.Save(document);
+        }
+
+        private static void CheckCommand(AddFactCommand command)
+        {
+            if (string.IsNullOrEmpty(command.text))
+            {
+                throw new EmptyFact();
+            }
+
+            if (command.text.Length > 30)
+            {
+                throw new TooLongFact(30);
+            }
+
+            if (string.IsNullOrEmpty(command.firstTextNodeXPath) || string.IsNullOrEmpty(command.lastTextNodeXPath))
+            {
+                throw new EmptyXPath();
+            }
         }
     }
 }

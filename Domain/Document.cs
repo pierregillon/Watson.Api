@@ -12,7 +12,6 @@ namespace fakenewsisor.server
 
         public Document()
         {
-
         }
         public Document(string url) : this()
         {
