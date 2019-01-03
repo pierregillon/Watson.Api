@@ -1,29 +1,29 @@
 using System;
 using System.Threading.Tasks;
-using try4real.cqrs;
-using try4real.ddd;
+using CQRSlite.Commands;
+using CQRSlite.Domain;
 
 namespace fakenewsisor.server
 {
-    public class RegisterDocumentCommandHandler : ICommandHandler<RegisterDocumentCommand, Guid>
+    public class RegisterDocumentCommandHandler : ICommandHandler<RegisterDocumentCommand>
     {
-        private readonly IRepository<Document> documentRepository;
+        private readonly IRepository repository;
         private readonly IWebSiteChecker webSiteChecker;
 
-        public RegisterDocumentCommandHandler(IRepository<Document> documentRepository, IWebSiteChecker webSiteChecker)
+        public RegisterDocumentCommandHandler(IRepository documentRepository, IWebSiteChecker webSiteChecker)
         {
             this.webSiteChecker = webSiteChecker;
-            this.documentRepository = documentRepository;
+            this.repository = documentRepository;
         }
 
-        public async Task<Guid> Handle(RegisterDocumentCommand command)
+        public async Task Handle(RegisterDocumentCommand command)
         {
             if (await webSiteChecker.IsOnline(command.DocumentUrl) == false)
                 throw new UnreachableWebDocument(command.DocumentUrl);
 
             var document = new Document(command.DocumentUrl);
-            await this.documentRepository.Save(document);
-            return document.Id;
+            await repository.Save(document);
+            command.RegisteredDocumentId = document.Id;
         }
     }
 }

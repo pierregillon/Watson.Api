@@ -6,14 +6,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="CQRSLite" Version="0.26.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
     <PackageReference Include="Nancy" Version="2.0.0-clinteastwood" />
     <PackageReference Include="Nancy.Bootstrappers.StructureMap" Version="2.0.0-clinteastwood" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\ddd-cqrs-library\try4real.csproj" />
   </ItemGroup>
 
 </Project>

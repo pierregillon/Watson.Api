@@ -1,17 +1,14 @@
 using System;
-using try4real.ddd;
 
 namespace fakenewsisor.server
 {
-    public class DocumentRegistered : Event
+    public class DocumentRegistered : DomainEvent
     {
-        public readonly Guid DocumentId;
-        public readonly string DocumentUrl;
+        public readonly string Url;
 
-        public DocumentRegistered(Guid documentId, string documentUrl)
+        public DocumentRegistered(Guid documentId, string documentUrl) : base(documentId)
         {
-            DocumentId = documentId;
-            DocumentUrl = documentUrl;
+            Url = documentUrl;
         }
     }
 }

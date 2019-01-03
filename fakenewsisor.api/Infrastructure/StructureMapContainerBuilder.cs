@@ -1,11 +1,10 @@
+using CQRSlite.Commands;
+using CQRSlite.Domain;
+using CQRSlite.Events;
 using fakenewsisor.server.Infrastructure;
 using StructureMap;
-using try4real.cqrs;
-using try4real.cqrs.structuremap;
-using try4real.ddd;
-using try4real.ddd.structuremap;
 
-namespace fakenewsisor.server
+namespace fakenewsisor.server.Infrastructure
 {
     public class StructureMapContainerBuilder
     {
@@ -13,10 +12,10 @@ namespace fakenewsisor.server
         {
             return new Container(x =>
             {
-                x.For<ICommandDispatcher>().Use<StructureMapCommandDispatcher>();
-                x.For<IEventPublisher>().Use<StructureMapEventPublisher>();
+                x.For<ICommandSender>().Use<StructureMapCommandSender>().Singleton();
+                x.For<IEventPublisher>().Use<StructureMapEventPublisher>().Singleton();
                 x.For<IEventStore>().Use<InMemoryEventStore>().Singleton();
-                x.For(typeof(IRepository<>)).Use(typeof(Repository<>));
+                x.For(typeof(IRepository)).Use(typeof(Repository));
                 x.For<IWebSiteChecker>().Use<HttpWebRequestChecker>();
                 x.For<InMemoryDatabase>().Singleton();
 
@@ -29,13 +28,7 @@ namespace fakenewsisor.server
                 x.Scan(scanner =>
                 {
                     scanner.AssemblyContainingType(typeof(Bootstrapper));
-                    scanner.ConnectImplementationsToTypesClosing(typeof(ICommandHandler<,>));
-                });
-
-                x.Scan(scanner =>
-                {
-                    scanner.AssemblyContainingType(typeof(Bootstrapper));
-                    scanner.ConnectImplementationsToTypesClosing(typeof(IEventListener<>));
+                    scanner.ConnectImplementationsToTypesClosing(typeof(IEventHandler<>));
                 });
             });
         }

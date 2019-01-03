@@ -1,14 +1,13 @@
 using System;
-using try4real.ddd;
+using CQRSlite.Events;
 
 namespace fakenewsisor.server
 {
-    public class FactAdded : Event
+    public class FactAdded : DomainEvent
     {
-        public readonly Guid Id;
         public readonly Fact Fact;
 
-        public FactAdded(Guid documentId, Fact fact)
+        public FactAdded(Guid documentId, Fact fact) : base(documentId)
         {
             Id = documentId;
             Fact = fact;

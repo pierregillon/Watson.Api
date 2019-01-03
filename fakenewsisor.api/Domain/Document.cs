@@ -1,13 +1,11 @@
 using System;
 using System.Collections.Generic;
-using try4real.ddd;
+using CQRSlite.Domain;
 
 namespace fakenewsisor.server
 {
     public class Document : AggregateRoot
     {
-        public override Guid Id { get; protected set; }
-
         private List<Fact> _facts = new List<Fact>();
 
         public Document()
@@ -30,7 +28,7 @@ namespace fakenewsisor.server
 
         private void Apply(DocumentRegistered @event)
         {
-            Id = @event.DocumentId;
+            Id = @event.Id;
         }
     }
 }

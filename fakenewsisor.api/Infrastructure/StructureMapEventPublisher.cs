@@ -1,8 +1,11 @@
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
+using CQRSlite.Events;
+using CQRSlite.Messages;
 using StructureMap;
 
-namespace try4real.ddd.structuremap
+namespace fakenewsisor.server.Infrastructure
 {
     public class StructureMapEventPublisher : IEventPublisher
     {
@@ -13,20 +16,22 @@ namespace try4real.ddd.structuremap
             this._container = container;
         }
 
-        public void Publish(Event @event)
+        public async Task Publish<T>(T @event, CancellationToken cancellationToken) where T : class, IEvent
         {
-            var genericListenerType = typeof(IEventListener<>);
+            var genericListenerType = typeof(IEventHandler<>);
             var listenerType = genericListenerType.MakeGenericType(@event.GetType());
-            var onMethod = listenerType.GetMethod("On");
             var listeners = _container.GetAllInstances(listenerType);
-            ThreadPool.QueueUserWorkItem(x =>
+
+            ThreadPool.QueueUserWorkItem(async x =>
             {
                 foreach (var handler in listeners)
                 {
-                    onMethod.Invoke(handler, new object[] { @event });
+                    var onMethod = handler.GetType().GetMethod("Handle");
+                    await (Task)onMethod.Invoke(handler, new object[] { @event });
                 }
             });
 
+            await Task.Delay(0);
         }
     }
 }

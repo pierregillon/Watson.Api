@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CQRSlite.Events;
 using fakenewsisor.server.Infrastructure;
-using try4real.ddd;
 
 namespace fakenewsisor.server
 {
-    public class DocumentFinder : IEventListener<DocumentRegistered>
+    public class DocumentFinder : IEventHandler<DocumentRegistered>
     {
         private readonly InMemoryDatabase database;
 
@@ -15,14 +15,16 @@ namespace fakenewsisor.server
             this.database = database;
         }
 
-        public void On(DocumentRegistered @event)
+        public Task Handle(DocumentRegistered @event)
         {
             database.Table<DocumentListItem>()
                     .Add(new DocumentListItem
                     {
-                        Id = @event.DocumentId,
-                        Url = @event.DocumentUrl
+                        Id = @event.Id,
+                        Url = @event.Url
                     });
+
+            return Task.Delay(0);
         }
 
         public DocumentListItem SearchByUrl(string documentUrl)

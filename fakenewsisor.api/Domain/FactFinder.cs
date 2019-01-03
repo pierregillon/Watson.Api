@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CQRSlite.Events;
 using fakenewsisor.server.Infrastructure;
-using try4real.ddd;
 
 namespace fakenewsisor.server
 {
-    public class FactFinder : IEventListener<FactAdded>
+    public class FactFinder : IEventHandler<FactAdded>
     {
         private readonly InMemoryDatabase database;
 
@@ -21,7 +21,7 @@ namespace fakenewsisor.server
             return Task.FromResult(data).ContinueWith(x => (IReadOnlyCollection<FactListItem>)x.Result);
         }
 
-        public void On(FactAdded @event)
+        public Task Handle(FactAdded @event)
         {
             var documentUrl = database.Table<DocumentListItem>().Single(x => x.Id == @event.Id).Url;
 
@@ -35,6 +35,8 @@ namespace fakenewsisor.server
                         offsetEnd = @event.Fact.Location.SelectedTextEndOffset,
                         text = @event.Fact.Text
                     });
+
+            return Task.Delay(0);
         }
     }
 }

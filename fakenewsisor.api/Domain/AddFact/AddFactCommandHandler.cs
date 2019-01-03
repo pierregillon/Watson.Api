@@ -1,22 +1,22 @@
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
-using try4real.cqrs;
-using try4real.ddd;
+using CQRSlite.Commands;
+using CQRSlite.Domain;
 
 namespace fakenewsisor.server
 {
     public class AddFactCommandHandler : ICommandHandler<AddFactCommand>
     {
-        private readonly IRepository<Document> documentRepository;
+        private readonly IRepository repository;
 
-        public AddFactCommandHandler(IRepository<Document> documentRepository)
+        public AddFactCommandHandler(IRepository repository)
         {
-            this.documentRepository = documentRepository;
+            this.repository = repository;
         }
 
         public async Task Handle(AddFactCommand command)
         {
-            var document = await documentRepository.Load(command.documentId);
+            var document = await repository.Get<Document>(command.documentId);
             if (document == null)
             {
                 throw new DocumentNotFound($"Unable to load {command.documentId}");
@@ -36,7 +36,7 @@ namespace fakenewsisor.server
                 Text = command.text
             };
             document.Add(fact);
-            await documentRepository.Save(document);
+            await repository.Save(document);
         }
 
         private static void CheckCommand(AddFactCommand command)

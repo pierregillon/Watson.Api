@@ -1,3 +1,4 @@
+using fakenewsisor.server.Infrastructure;
 using Nancy.Bootstrappers.StructureMap;
 using StructureMap;
 

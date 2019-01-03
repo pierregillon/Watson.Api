@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "fakenewsisor.server", "fake
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "fakenewsisor.tests", "fakenewsisor.tests\fakenewsisor.tests.csproj", "{8576A411-7267-40B3-B02B-3B59ECEAF776}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "try4real", "ddd-cqrs-library\try4real.csproj", "{F13BA604-68DE-47ED-98D8-E6B50279F8EA}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

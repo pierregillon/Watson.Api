@@ -1,13 +1,11 @@
 using System;
 using System.Threading.Tasks;
+using CQRSlite.Commands;
+using CQRSlite.Events;
 using fakenewsisor.server;
 using fakenewsisor.server.Infrastructure;
 using NSubstitute;
 using StructureMap;
-using try4real.cqrs;
-using try4real.cqrs.structuremap;
-using try4real.ddd;
-using try4real.ddd.structuremap;
 using Xunit;
 
 namespace fakenewsisor.tests
@@ -16,7 +14,7 @@ namespace fakenewsisor.tests
     {
         private readonly string OFFLINE_WEB_SITE = "https://abcdefxx.com";
 
-        private readonly ICommandDispatcher _dispatcher;
+        private readonly ICommandSender commandSender;
         private readonly IEventPublisher _eventPublisher;
         private readonly IWebSiteChecker _webSiteChecker;
 
@@ -29,7 +27,7 @@ namespace fakenewsisor.tests
             container.Inject(Substitute.For<IWebSiteChecker>());
             container.Inject<IEventStore>(container.GetInstance<InMemoryEventStore>());
 
-            _dispatcher = container.GetInstance<ICommandDispatcher>();
+            commandSender = container.GetInstance<ICommandSender>();
             _eventPublisher = container.GetInstance<IEventPublisher>();
             _webSiteChecker = container.GetInstance<IWebSiteChecker>();
             _webSiteChecker.IsOnline(Arg.Any<string>()).Returns(Task.FromResult(true));
@@ -42,10 +40,10 @@ namespace fakenewsisor.tests
             var command = new RegisterDocumentCommand("https://google.com");
 
             // Act
-            await _dispatcher.Dispatch<RegisterDocumentCommand, Guid>(command);
+            await commandSender.Send<RegisterDocumentCommand>(command);
 
             // Assert
-            _eventPublisher.Received(1).Publish(Arg.Any<DocumentRegistered>());
+            await _eventPublisher.Received(1).Publish(Arg.Any<DocumentRegistered>());
         }
 
         [Fact]
@@ -58,7 +56,7 @@ namespace fakenewsisor.tests
             await Assert.ThrowsAsync<UnreachableWebDocument>(async () =>
             {
                 var command = new RegisterDocumentCommand(OFFLINE_WEB_SITE);
-                await _dispatcher.Dispatch<RegisterDocumentCommand, Guid>(command);
+                await commandSender.Send<RegisterDocumentCommand>(command);
             });
         }
     }

@@ -1,8 +1,8 @@
 using System;
 using System.Threading.Tasks;
+using CQRSlite.Commands;
 using Nancy.Configuration;
 using Nancy.ModelBinding;
-using try4real.cqrs;
 
 namespace fakenewsisor.server
 {
@@ -11,7 +11,7 @@ namespace fakenewsisor.server
         public FactModule(
             DocumentFinder documentFinder,
             FactFinder factFinder,
-            ICommandDispatcher dispatcher) : base()
+            ICommandSender dispatcher) : base()
         {
             Get("/api/fact", async _ =>
             {
@@ -24,7 +24,7 @@ namespace fakenewsisor.server
                 var url = GetUrlQueryParameter();
                 var command = this.Bind<AddFactCommand>();
                 command.documentId = await GetDocumentId(documentFinder, dispatcher, url);
-                await dispatcher.Dispatch(command);
+                await dispatcher.Send(command);
                 return "fact added";
             });
         }
@@ -37,11 +37,15 @@ namespace fakenewsisor.server
             return url;
         }
 
-        private static async Task<Guid> GetDocumentId(DocumentFinder documentFinder, ICommandDispatcher dispatcher, string documentUrl)
+        private static async Task<Guid> GetDocumentId(DocumentFinder documentFinder, ICommandSender commandSender, string documentUrl)
         {
             var document = documentFinder.SearchByUrl(documentUrl);
             if (document == null)
-                return await dispatcher.Dispatch<RegisterDocumentCommand, Guid>(new RegisterDocumentCommand(documentUrl));
+            {
+                var command = new RegisterDocumentCommand(documentUrl);
+                await commandSender.Send<RegisterDocumentCommand>(command);
+                return command.RegisteredDocumentId;
+            }
             else
                 return document.Id;
         }
