@@ -29,8 +29,8 @@ namespace fakenewsisor.server.Infrastructure
                     _inMemoryDb.Add(@event.Id, list);
                 }
                 list.Add(@event);
-                await _publisher.Publish(@event, cancellationToken);
             }
+            await Task.Delay(0);
         }
 
         public Task<IEnumerable<IEvent>> Get(Guid aggregateId, int fromVersion, CancellationToken cancellationToken = default(CancellationToken))
