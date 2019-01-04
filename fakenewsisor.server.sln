@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "fakenewsisor.server", "fakenewsisor.api\fakenewsisor.server.csproj", "{26481E1E-A5A8-428A-A16D-233DEE7BF746}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Watson", "Watson\Watson.csproj", "{26481E1E-A5A8-428A-A16D-233DEE7BF746}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "fakenewsisor.tests", "fakenewsisor.tests\fakenewsisor.tests.csproj", "{8576A411-7267-40B3-B02B-3B59ECEAF776}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Watson.Tests", "Watson.Tests\Watson.Tests.csproj", "{8576A411-7267-40B3-B02B-3B59ECEAF776}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
