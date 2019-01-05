@@ -14,6 +14,9 @@ namespace Watson.Domain.SuspectFalseFact
             if (string.IsNullOrEmpty(htmlLocation.FirstSelectedHtmlNodeXPath) || string.IsNullOrEmpty(htmlLocation.LastSelectedHtmlNodeXPath)) {
                 throw new InvalidHtmlLocation("Both node Xmap should be defined.");
             }
+            if(htmlLocation.SelectedTextStartOffset < 0 || htmlLocation.SelectedTextEndOffset < 0 || htmlLocation.SelectedTextStartOffset >= htmlLocation.SelectedTextEndOffset) {
+                throw new InvalidHtmlLocationOffsets();
+            }
             if (wording.Length != htmlLocation.SelectedTextEndOffset - htmlLocation.SelectedTextStartOffset) {
                 throw new FactWordingAndOffsetInconsistent();
             }

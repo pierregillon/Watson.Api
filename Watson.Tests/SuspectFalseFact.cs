@@ -66,25 +66,6 @@ namespace Watson.Tests
             ));
         }
 
-        [Theory]
-        [InlineData(null)]
-        [InlineData("")]
-        [InlineData("   ")]
-        public async Task throw_exception_when_the_wording_invalid(string wording)
-        {
-            // Arrange
-            _webSiteChecker.IsOnline(UNREACHABLE_WEB_PAGE).Returns(false);
-
-            // Act
-            await Assert.ThrowsAsync<ArgumentException>(async () =>
-            {
-                var command = new SuspectFalseFactCommand {
-                    WebPageUrl = REACHABLE_WEB_PAGE,
-                    Wording = wording
-                };
-                await _commandSender.Send(command);
-            });
-        }
         [Fact]
         public async Task throw_exception_when_web_page_unreachable()
         {
@@ -95,6 +76,25 @@ namespace Watson.Tests
                 };
 
                 // Act
+                await _commandSender.Send(command);
+            });
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData("   ")]
+        public async Task throw_exception_when_the_wording_invalid(string wording)
+        {
+            // Arrange
+            _webSiteChecker.IsOnline(UNREACHABLE_WEB_PAGE).Returns(false);
+
+            // Act
+            await Assert.ThrowsAsync<ArgumentException>(async () =>             {
+                var command = new SuspectFalseFactCommand {
+                    WebPageUrl = REACHABLE_WEB_PAGE,
+                    Wording = wording
+                };
                 await _commandSender.Send(command);
             });
         }
@@ -115,6 +115,30 @@ namespace Watson.Tests
                 await _commandSender.Send(command);
             });
         }
+
+        [Theory]
+        [InlineData(0, 0)]
+        [InlineData(3, 3)]
+        [InlineData(-1, 1)]
+        [InlineData(1, -1)]
+        [InlineData(10, 1)]
+        public async Task throw_exception_when_invalid_offsets(int startOffset, int endOffset)
+        {
+            await Assert.ThrowsAsync<InvalidHtmlLocationOffsets>(async () => {
+                // Arrange
+                var command = new SuspectFalseFactCommand {
+                    WebPageUrl = REACHABLE_WEB_PAGE,
+                    FirstSelectedHtmlNodeXPath = SOME_XMAP,
+                    LastSelectedHtmlNodeXPath = SOME_XMAP,
+                    Wording = SOME_WORDING,
+                    SelectedTextStartOffset = startOffset,
+                    SelectedTextEndOffset = endOffset
+                };
+
+                // Act
+                await _commandSender.Send(command);
+            });
+        }
         
         [Fact]
         public async Task throw_exception_when_inconsistent_wording_and_offsets()
@@ -125,9 +149,9 @@ namespace Watson.Tests
                     WebPageUrl = REACHABLE_WEB_PAGE,
                     FirstSelectedHtmlNodeXPath = SOME_XMAP,
                     LastSelectedHtmlNodeXPath = SOME_XMAP,
-                    Wording = "It is in the bag.",
+                    Wording = SOME_WORDING,
                     SelectedTextStartOffset = 0,
-                    SelectedTextEndOffset = "It is in the bag.".Length - 5
+                    SelectedTextEndOffset = SOME_WORDING.Length - 2
                 };
 
                 // Act
