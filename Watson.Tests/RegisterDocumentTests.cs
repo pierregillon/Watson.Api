@@ -55,7 +55,7 @@ namespace watson.tests
             _webSiteChecker.IsOnline(OFFLINE_WEB_SITE).Returns(Task.FromResult(false));
 
             // Act
-            await Assert.ThrowsAsync<UnreachableWebDocument>(async () =>
+            await Assert.ThrowsAsync<UnreachableWebPage>(async () =>
             {
                 var command = new RegisterDocumentCommand(OFFLINE_WEB_SITE);
                 await commandSender.Send<RegisterDocumentCommand>(command);

@@ -13,8 +13,11 @@ namespace Watson.Tests
 {
     public class SuspectFalseFact
     {
+        private const string UNREACHABLE_WEB_PAGE = "https://wwww.unreachable/xx.html";
+
         private ICommandSender _commandSender;
         private IEventPublisher _eventPublisher;
+        private IWebSiteChecker _webSiteChecker;
 
         public SuspectFalseFact()
         {
@@ -27,13 +30,16 @@ namespace Watson.Tests
 
             _commandSender = container.GetInstance<ICommandSender>();
             _eventPublisher = container.GetInstance<IEventPublisher>();
+            _webSiteChecker = container.GetInstance<IWebSiteChecker>();
+            _webSiteChecker.IsOnline(Arg.Any<string>()).Returns(Task.FromResult(true));
         }
 
         [Fact]
         public async Task publish_suspicious_fact_detected()
         {
             // Arrange
-            var command = new SuspectFalseFactCommand {
+            var command = new SuspectFalseFactCommand
+            {
                 Text = "Our president has been elected by more that 60% of the population.",
                 WebPageUrl = "https://wwww.fakenews/president.html",
                 FirstSelectedHtmlNodeXPath = "//*[@id=\"content\"]/div/div/div[1]/div/div/div/div[3]/p[6]",
@@ -46,7 +52,7 @@ namespace Watson.Tests
             await _commandSender.Send(command);
 
             // Assert
-            await _eventPublisher.Received(1).Publish(Arg.Is<SuspiciousFactDetected>(@event => 
+            await _eventPublisher.Received(1).Publish(Arg.Is<SuspiciousFactDetected>(@event =>
                 @event.Id != default(Guid) &&
                 @event.FactContent == command.Text &&
                 @event.WebPageUrl == command.WebPageUrl &&
@@ -55,6 +61,21 @@ namespace Watson.Tests
                 @event.Location.SelectedTextStartOffset == command.SelectedTextStartOffset &&
                 @event.Location.SelectedTextEndOffset == command.SelectedTextEndOffset
             ));
+        }
+
+        [Fact]
+        public async Task throw_exception_when_web_page_unreachable()
+        {
+            // Arrange
+            _webSiteChecker.IsOnline(UNREACHABLE_WEB_PAGE).Returns(false);
+
+            // Act
+            await Assert.ThrowsAsync<UnreachableWebPage>(async () => {
+                var command = new SuspectFalseFactCommand {
+                    WebPageUrl = UNREACHABLE_WEB_PAGE
+                };
+                await _commandSender.Send(command);
+            });
         }
     }
 }

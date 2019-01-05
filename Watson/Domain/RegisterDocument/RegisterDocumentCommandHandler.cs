@@ -19,7 +19,7 @@ namespace Watson.Domain.RegisterDocument
         public async Task Handle(RegisterDocumentCommand command)
         {
             if (await webSiteChecker.IsOnline(command.DocumentUrl) == false)
-                throw new UnreachableWebDocument(command.DocumentUrl);
+                throw new UnreachableWebPage(command.DocumentUrl);
 
             var document = new Document(command.DocumentUrl);
             await repository.Save(document);

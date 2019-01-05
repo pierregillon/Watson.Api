@@ -4,9 +4,9 @@ using System.Runtime.Serialization;
 namespace Watson.Domain.RegisterDocument
 
 {
-    public class UnreachableWebDocument : Exception
+    public class UnreachableWebPage : Exception
     {
-        public UnreachableWebDocument(string url) : base($"The web page '{url}' is unreachable.")
+        public UnreachableWebPage(string url) : base($"The web page '{url}' is unreachable.")
         {
         }
     }
