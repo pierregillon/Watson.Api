@@ -29,10 +29,10 @@ namespace Watson.Domain
                     .Add(new FactListItem
                     {
                         documentUrl = documentUrl,
-                        firstTextNodeXPath = @event.Fact.Location.FirstSelectedHtmlNodeXPath,
-                        lastTextNodeXPath = @event.Fact.Location.LastSelectedHtmlNodeXPath,
-                        offsetStart = @event.Fact.Location.SelectedTextStartOffset,
-                        offsetEnd = @event.Fact.Location.SelectedTextEndOffset,
+                        firstTextNodeXPath = @event.Fact.Location.FirstNodeXPath,
+                        lastTextNodeXPath = @event.Fact.Location.LastNodeXPath,
+                        offsetStart = @event.Fact.Location.StartOffset,
+                        offsetEnd = @event.Fact.Location.EndOffset,
                         text = @event.Fact.Text
                     });
 

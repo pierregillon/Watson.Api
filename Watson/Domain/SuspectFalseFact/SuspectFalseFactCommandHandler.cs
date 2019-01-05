@@ -22,12 +22,12 @@ namespace Watson.Domain.SuspectFalseFact
                 throw new UnreachableWebPage(command.WebPageUrl);
             }
 
-            var fact = new Fact2(command.Wording, command.WebPageUrl, new HtmlLocation() {
-                FirstSelectedHtmlNodeXPath = command.FirstSelectedHtmlNodeXPath,
-                LastSelectedHtmlNodeXPath = command.LastSelectedHtmlNodeXPath,
-                SelectedTextStartOffset = command.SelectedTextStartOffset,
-                SelectedTextEndOffset = command.SelectedTextEndOffset
-            });
+            var fact = new Fact2(command.Wording, command.WebPageUrl, new HtmlLocation (
+                command.FirstSelectedHtmlNodeXPath,
+                command.LastSelectedHtmlNodeXPath,
+                command.SelectedTextStartOffset,
+                command.SelectedTextEndOffset
+            ));
 
             await repository.Save(fact);
         }

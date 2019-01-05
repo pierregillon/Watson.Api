@@ -28,10 +28,10 @@ namespace Watson.Domain.AddFact
             {
                 Location = new HtmlLocation()
                 {
-                    FirstSelectedHtmlNodeXPath = command.firstTextNodeXPath,
-                    LastSelectedHtmlNodeXPath = command.lastTextNodeXPath,
-                    SelectedTextStartOffset = command.offsetStart,
-                    SelectedTextEndOffset = command.offsetEnd,
+                    FirstNodeXPath = command.firstTextNodeXPath,
+                    LastNodeXPath = command.lastTextNodeXPath,
+                    StartOffset = command.offsetStart,
+                    EndOffset = command.offsetEnd,
                 },
                 Text = command.text
             };

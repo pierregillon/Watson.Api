@@ -59,10 +59,10 @@ namespace Watson.Tests
                 @event.Id != default(Guid) &&
                 @event.Wording == command.Wording &&
                 @event.WebPageUrl == command.WebPageUrl &&
-                @event.Location.FirstSelectedHtmlNodeXPath == command.FirstSelectedHtmlNodeXPath &&
-                @event.Location.LastSelectedHtmlNodeXPath == command.LastSelectedHtmlNodeXPath &&
-                @event.Location.SelectedTextStartOffset == command.SelectedTextStartOffset &&
-                @event.Location.SelectedTextEndOffset == command.SelectedTextEndOffset
+                @event.Location.FirstNodeXPath == command.FirstSelectedHtmlNodeXPath &&
+                @event.Location.LastNodeXPath == command.LastSelectedHtmlNodeXPath &&
+                @event.Location.StartOffset == command.SelectedTextStartOffset &&
+                @event.Location.EndOffset == command.SelectedTextEndOffset
             ));
         }
 
@@ -84,7 +84,7 @@ namespace Watson.Tests
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public async Task throw_exception_when_the_wording_invalid(string wording)
+        public async Task throw_exception_when_invalid_wording(string wording)
         {
             // Arrange
             _webSiteChecker.IsOnline(UNREACHABLE_WEB_PAGE).Returns(false);
@@ -106,9 +106,7 @@ namespace Watson.Tests
                 // Arrange
                 var command = new SuspectFalseFactCommand {
                     WebPageUrl = REACHABLE_WEB_PAGE,
-                    Wording = SOME_WORDING,
-                    FirstSelectedHtmlNodeXPath = "",
-                    LastSelectedHtmlNodeXPath = "",
+                    Wording = SOME_WORDING
                 };
 
                 // Act
