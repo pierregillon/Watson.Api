@@ -8,6 +8,10 @@ namespace Watson.Domain.SuspectFalseFact
         public Fact2(){}
         public Fact2(string factContent, string webPageUrl, HtmlLocation htmlLocation)
         {
+            if (string.IsNullOrEmpty(factContent) || string.IsNullOrWhiteSpace(factContent)) {
+                throw new ArgumentException("message", nameof(factContent));
+            }
+
             if (string.IsNullOrEmpty(htmlLocation.FirstSelectedHtmlNodeXPath) || string.IsNullOrEmpty(htmlLocation.LastSelectedHtmlNodeXPath)) {
                 throw new InvalidHtmlLocation("Both node Xmap should be defined.");
             }

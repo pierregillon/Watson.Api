@@ -16,6 +16,7 @@ namespace Watson.Tests
         private const string UNREACHABLE_WEB_PAGE = "https://wwww.unreachable/xx.html";
         private const string REACHABLE_WEB_PAGE = "https://wwww.fakenews/president.html";
         private const string SOME_XMAP = "//*[@id=\"content\"]/div/div/div[1]/div/";
+        private const string SOME_TEXT = "test";
 
         private ICommandSender _commandSender;
         private IEventPublisher _eventPublisher;
@@ -34,6 +35,7 @@ namespace Watson.Tests
             _eventPublisher = container.GetInstance<IEventPublisher>();
             _webSiteChecker = container.GetInstance<IWebSiteChecker>();
             _webSiteChecker.IsOnline(Arg.Any<string>()).Returns(Task.FromResult(true));
+            _webSiteChecker.IsOnline(UNREACHABLE_WEB_PAGE).Returns(false);
         }
 
         [Fact]
@@ -64,17 +66,35 @@ namespace Watson.Tests
             ));
         }
 
-        [Fact]
-        public async Task throw_exception_when_web_page_unreachable()
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData("   ")]
+        public async Task throw_exception_when_text_invalid(string text)
         {
             // Arrange
             _webSiteChecker.IsOnline(UNREACHABLE_WEB_PAGE).Returns(false);
 
             // Act
+            await Assert.ThrowsAsync<ArgumentException>(async () =>
+            {
+                var command = new SuspectFalseFactCommand {
+                    WebPageUrl = REACHABLE_WEB_PAGE,
+                    Text = text
+                };
+                await _commandSender.Send(command);
+            });
+        }
+        [Fact]
+        public async Task throw_exception_when_web_page_unreachable()
+        {
             await Assert.ThrowsAsync<UnreachableWebPage>(async () => {
+                // Arrange
                 var command = new SuspectFalseFactCommand {
                     WebPageUrl = UNREACHABLE_WEB_PAGE
                 };
+
+                // Act
                 await _commandSender.Send(command);
             });
         }
@@ -86,6 +106,7 @@ namespace Watson.Tests
                 // Arrange
                 var command = new SuspectFalseFactCommand {
                     WebPageUrl = REACHABLE_WEB_PAGE,
+                    Text = SOME_TEXT,
                     FirstSelectedHtmlNodeXPath = "",
                     LastSelectedHtmlNodeXPath = "",
                 };
