@@ -15,6 +15,7 @@ namespace Watson.Tests
     {
         private const string UNREACHABLE_WEB_PAGE = "https://wwww.unreachable/xx.html";
         private const string REACHABLE_WEB_PAGE = "https://wwww.fakenews/president.html";
+        private const string SOME_XMAP = "//*[@id=\"content\"]/div/div/div[1]/div/";
 
         private ICommandSender _commandSender;
         private IEventPublisher _eventPublisher;
@@ -44,8 +45,8 @@ namespace Watson.Tests
                 WebPageUrl = "https://wwww.fakenews/president.html",
                 FirstSelectedHtmlNodeXPath = "//*[@id=\"content\"]/div/div/div[1]/div/div/div/div[3]/p[6]",
                 LastSelectedHtmlNodeXPath = "//*[@id=\"content\"]/div/div/div[1]/div/div/div/div[3]/p[6]",
-                SelectedTextStartOffset = 1,
-                SelectedTextEndOffset = 62
+                SelectedTextStartOffset = 10,
+                SelectedTextEndOffset = 76
             };
 
             // Act
@@ -87,6 +88,25 @@ namespace Watson.Tests
                     WebPageUrl = REACHABLE_WEB_PAGE,
                     FirstSelectedHtmlNodeXPath = "",
                     LastSelectedHtmlNodeXPath = "",
+                };
+
+                // Act
+                await _commandSender.Send(command);
+            });
+        }
+        
+        [Fact]
+        public async Task throw_exception_when_offset_and_text_inconsistent()
+        {
+            await Assert.ThrowsAsync<FactTextAndOffsetInconsistent>(async () => {
+                // Arrange
+                var command = new SuspectFalseFactCommand {
+                    WebPageUrl = REACHABLE_WEB_PAGE,
+                    FirstSelectedHtmlNodeXPath = SOME_XMAP,
+                    LastSelectedHtmlNodeXPath = SOME_XMAP,
+                    Text = "It is in the bag.",
+                    SelectedTextStartOffset = 0,
+                    SelectedTextEndOffset = "It is in the bag.".Length - 5
                 };
 
                 // Act
