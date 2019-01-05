@@ -1,7 +1,12 @@
-namespace Watson.Domain
+using CQRSlite.Commands;
+using Watson.Domain;
+
+namespace Watson.Domain.SuspectFalseFact
 {
-    public struct HtmlLocation
+    public class SuspectFalseFactCommand : ICommand
     {
+        public string Text { get; set; }
+        public string WebPageUrl { get; set; }
         public string FirstSelectedHtmlNodeXPath { get; set; }
         public string LastSelectedHtmlNodeXPath { get; set; }
         public int SelectedTextStartOffset { get; set; }
