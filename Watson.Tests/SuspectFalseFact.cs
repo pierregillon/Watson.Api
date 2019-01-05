@@ -14,6 +14,7 @@ namespace Watson.Tests
     public class SuspectFalseFact
     {
         private const string UNREACHABLE_WEB_PAGE = "https://wwww.unreachable/xx.html";
+        private const string REACHABLE_WEB_PAGE = "https://wwww.fakenews/president.html";
 
         private ICommandSender _commandSender;
         private IEventPublisher _eventPublisher;
@@ -38,8 +39,7 @@ namespace Watson.Tests
         public async Task publish_suspicious_fact_detected()
         {
             // Arrange
-            var command = new SuspectFalseFactCommand
-            {
+            var command = new SuspectFalseFactCommand {
                 Text = "Our president has been elected by more that 60% of the population.",
                 WebPageUrl = "https://wwww.fakenews/president.html",
                 FirstSelectedHtmlNodeXPath = "//*[@id=\"content\"]/div/div/div[1]/div/div/div/div[3]/p[6]",
@@ -74,6 +74,22 @@ namespace Watson.Tests
                 var command = new SuspectFalseFactCommand {
                     WebPageUrl = UNREACHABLE_WEB_PAGE
                 };
+                await _commandSender.Send(command);
+            });
+        }
+
+        [Fact]
+        public async Task throw_exception_when_invalid_html_xmap_location()
+        {
+            await Assert.ThrowsAsync<InvalidHtmlLocation>(async () => {
+                // Arrange
+                var command = new SuspectFalseFactCommand {
+                    WebPageUrl = REACHABLE_WEB_PAGE,
+                    FirstSelectedHtmlNodeXPath = "",
+                    LastSelectedHtmlNodeXPath = "",
+                };
+
+                // Act
                 await _commandSender.Send(command);
             });
         }
