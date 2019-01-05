@@ -19,7 +19,7 @@ Technical :
 Domain events brain storming :
 * SuspiciousFactDetected
     * FactId
-    * FactContent
+    * Wording
     * Location
         * WebPageUrl
         * Xpath

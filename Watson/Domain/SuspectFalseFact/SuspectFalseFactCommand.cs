@@ -5,7 +5,7 @@ namespace Watson.Domain.SuspectFalseFact
 {
     public class SuspectFalseFactCommand : ICommand
     {
-        public string Text { get; set; }
+        public string Wording { get; set; }
         public string WebPageUrl { get; set; }
         public string FirstSelectedHtmlNodeXPath { get; set; }
         public string LastSelectedHtmlNodeXPath { get; set; }

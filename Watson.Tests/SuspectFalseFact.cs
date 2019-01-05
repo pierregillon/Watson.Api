@@ -16,7 +16,7 @@ namespace Watson.Tests
         private const string UNREACHABLE_WEB_PAGE = "https://wwww.unreachable/xx.html";
         private const string REACHABLE_WEB_PAGE = "https://wwww.fakenews/president.html";
         private const string SOME_XMAP = "//*[@id=\"content\"]/div/div/div[1]/div/";
-        private const string SOME_TEXT = "test";
+        private const string SOME_WORDING = "test";
 
         private ICommandSender _commandSender;
         private IEventPublisher _eventPublisher;
@@ -43,7 +43,7 @@ namespace Watson.Tests
         {
             // Arrange
             var command = new SuspectFalseFactCommand {
-                Text = "Our president has been elected by more that 60% of the population.",
+                Wording = "Our president has been elected by more that 60% of the population.",
                 WebPageUrl = "https://wwww.fakenews/president.html",
                 FirstSelectedHtmlNodeXPath = "//*[@id=\"content\"]/div/div/div[1]/div/div/div/div[3]/p[6]",
                 LastSelectedHtmlNodeXPath = "//*[@id=\"content\"]/div/div/div[1]/div/div/div/div[3]/p[6]",
@@ -57,7 +57,7 @@ namespace Watson.Tests
             // Assert
             await _eventPublisher.Received(1).Publish(Arg.Is<SuspiciousFactDetected>(@event =>
                 @event.Id != default(Guid) &&
-                @event.FactContent == command.Text &&
+                @event.Wording == command.Wording &&
                 @event.WebPageUrl == command.WebPageUrl &&
                 @event.Location.FirstSelectedHtmlNodeXPath == command.FirstSelectedHtmlNodeXPath &&
                 @event.Location.LastSelectedHtmlNodeXPath == command.LastSelectedHtmlNodeXPath &&
@@ -70,7 +70,7 @@ namespace Watson.Tests
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public async Task throw_exception_when_text_invalid(string text)
+        public async Task throw_exception_when_the_wording_invalid(string wording)
         {
             // Arrange
             _webSiteChecker.IsOnline(UNREACHABLE_WEB_PAGE).Returns(false);
@@ -80,7 +80,7 @@ namespace Watson.Tests
             {
                 var command = new SuspectFalseFactCommand {
                     WebPageUrl = REACHABLE_WEB_PAGE,
-                    Text = text
+                    Wording = wording
                 };
                 await _commandSender.Send(command);
             });
@@ -106,7 +106,7 @@ namespace Watson.Tests
                 // Arrange
                 var command = new SuspectFalseFactCommand {
                     WebPageUrl = REACHABLE_WEB_PAGE,
-                    Text = SOME_TEXT,
+                    Wording = SOME_WORDING,
                     FirstSelectedHtmlNodeXPath = "",
                     LastSelectedHtmlNodeXPath = "",
                 };
@@ -117,15 +117,15 @@ namespace Watson.Tests
         }
         
         [Fact]
-        public async Task throw_exception_when_offset_and_text_inconsistent()
+        public async Task throw_exception_when_inconsistent_wording_and_offsets()
         {
-            await Assert.ThrowsAsync<FactTextAndOffsetInconsistent>(async () => {
+            await Assert.ThrowsAsync<FactWordingAndOffsetInconsistent>(async () => {
                 // Arrange
                 var command = new SuspectFalseFactCommand {
                     WebPageUrl = REACHABLE_WEB_PAGE,
                     FirstSelectedHtmlNodeXPath = SOME_XMAP,
                     LastSelectedHtmlNodeXPath = SOME_XMAP,
-                    Text = "It is in the bag.",
+                    Wording = "It is in the bag.",
                     SelectedTextStartOffset = 0,
                     SelectedTextEndOffset = "It is in the bag.".Length - 5
                 };

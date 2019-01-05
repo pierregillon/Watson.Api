@@ -2,9 +2,9 @@ using System;
 
 namespace Watson.Domain.SuspectFalseFact
 {
-    public class FactTextAndOffsetInconsistent : Exception
+    public class FactWordingAndOffsetInconsistent : Exception
     {
-        public FactTextAndOffsetInconsistent() : base("Fact inconsistency between offset location and text.")
+        public FactWordingAndOffsetInconsistent() : base("Fact inconsistency between offset location and text.")
         {
         }
     }

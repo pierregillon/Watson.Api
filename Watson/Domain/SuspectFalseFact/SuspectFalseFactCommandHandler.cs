@@ -22,7 +22,7 @@ namespace Watson.Domain.SuspectFalseFact
                 throw new UnreachableWebPage(command.WebPageUrl);
             }
 
-            var fact = new Fact2(command.Text, command.WebPageUrl, new HtmlLocation() {
+            var fact = new Fact2(command.Wording, command.WebPageUrl, new HtmlLocation() {
                 FirstSelectedHtmlNodeXPath = command.FirstSelectedHtmlNodeXPath,
                 LastSelectedHtmlNodeXPath = command.LastSelectedHtmlNodeXPath,
                 SelectedTextStartOffset = command.SelectedTextStartOffset,
