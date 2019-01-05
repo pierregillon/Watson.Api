@@ -15,3 +15,32 @@ Technical :
 - Update highlight injection to not alter document structure display
 - Can not create a fact on multiple dom element (p)
 - Add domain id and not Guid.
+
+Domain events brain storming :
+* SuspiciousFactDetected
+    * FactId
+    * FactContent
+    * Location
+        * WebPageUrl
+        * Xpath
+    * UserId
+* RelatedFactAdded
+    * FactId
+    * RelatedFactId
+    * UserId
+* FactRelationQualified
+    * FactId
+    * RelatedFactId
+    * UserId
+    * Fact qualification
+        * Confirm completely
+        * Confirm partially
+        * Infirm partially
+        * Infirm completely
+        * Not a fact
+* FactUpVoted
+    * FactId
+    * UserId
+* FactDownVoted
+    * FactId
+    * UserId
