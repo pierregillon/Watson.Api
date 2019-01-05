@@ -1,7 +1,6 @@
 using System.Threading.Tasks;
 using CQRSlite.Commands;
 using CQRSlite.Domain;
-using Watson.Domain.RegisterDocument;
 
 namespace Watson.Domain.SuspectFalseFact
 {
@@ -22,7 +21,7 @@ namespace Watson.Domain.SuspectFalseFact
                 throw new UnreachableWebPage(command.WebPageUrl);
             }
 
-            var fact = new Fact2(command.Wording, command.WebPageUrl, new HtmlLocation (
+            var fact = new Fact(command.Wording, command.WebPageUrl, new HtmlLocation (
                 command.FirstSelectedHtmlNodeXPath,
                 command.LastSelectedHtmlNodeXPath,
                 command.SelectedTextStartOffset,

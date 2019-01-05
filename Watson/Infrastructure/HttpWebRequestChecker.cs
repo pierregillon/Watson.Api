@@ -1,7 +1,7 @@
 using System;
 using System.Net;
 using System.Threading.Tasks;
-using Watson.Domain.RegisterDocument;
+using Watson.Domain.SuspectFalseFact;
 
 namespace Watson.Infrastructure
 {

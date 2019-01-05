@@ -3,8 +3,8 @@ using CQRSlite.Domain;
 using CQRSlite.Events;
 using Watson.Infrastructure;
 using StructureMap;
-using Watson.Domain.RegisterDocument;
 using Watson.Server;
+using Watson.Domain.SuspectFalseFact;
 
 namespace Watson.Infrastructure
 {

@@ -4,7 +4,6 @@ using CQRSlite.Commands;
 using CQRSlite.Events;
 using NSubstitute;
 using Watson.Domain;
-using Watson.Domain.RegisterDocument;
 using Watson.Domain.SuspectFalseFact;
 using Watson.Infrastructure;
 using Xunit;

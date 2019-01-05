@@ -4,15 +4,13 @@ using CQRSlite.Commands;
 using Nancy.Configuration;
 using Nancy.ModelBinding;
 using Watson.Domain;
-using Watson.Domain.AddFact;
-using Watson.Domain.RegisterDocument;
+using Watson.Domain.SuspectFalseFact;
 
 namespace Watson.Api
 {
     public class FactModule : Nancy.NancyModule
     {
         public FactModule(
-            DocumentFinder documentFinder,
             FactFinder factFinder,
             ICommandSender dispatcher) : base()
         {
@@ -24,9 +22,8 @@ namespace Watson.Api
 
             Post("/api/fact", async _ =>
             {
-                var url = GetUrlQueryParameter();
-                var command = this.Bind<AddFactCommand>();
-                command.documentId = await GetDocumentId(documentFinder, dispatcher, url);
+                var command = this.Bind<SuspectFalseFactCommand>();
+                command.WebPageUrl = GetUrlQueryParameter();
                 await dispatcher.Send(command);
                 return "fact added";
             });
@@ -38,19 +35,6 @@ namespace Watson.Api
             if (string.IsNullOrEmpty(url))
                 throw new Exception("url parameter must be specified");
             return url;
-        }
-
-        private static async Task<Guid> GetDocumentId(DocumentFinder documentFinder, ICommandSender commandSender, string documentUrl)
-        {
-            var document = documentFinder.SearchByUrl(documentUrl);
-            if (document == null)
-            {
-                var command = new RegisterDocumentCommand(documentUrl);
-                await commandSender.Send<RegisterDocumentCommand>(command);
-                return command.RegisteredDocumentId;
-            }
-            else
-                return document.Id;
         }
     }
 }
