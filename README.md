@@ -10,3 +10,44 @@ The api is built using Command Query Response Segregation (CQRS), Domain Driven 
 
 # Libraries
 * [CQRSLite](https://github.com/gautema/CQRSlite)
+
+# In progress
+As a fact checker, I must be able to
+- Indicate investigating fact count in the present web page
+- Link 2 facts
+- Qualify a fact relation (confirm => infirm)
+- List all related fact of a fact
+- Indicate a suspected fact is interesting and further investigation needed
+- Indicate a fact is not a fact. Remove needed.
+- Qualify document (scientific, politic, non professional blog) to estimate quality and pertinence
+- Hide unimportant words in a fact, replaced by [...]
+
+# Domain event brain storming
+Domain events brain storming :
+* SuspiciousFactDetected
+    * FactId
+    * Wording
+    * Location
+        * WebPageUrl
+        * Xpath
+    * UserId
+* RelatedFactAdded
+    * FactId
+    * RelatedFactId
+    * UserId
+* FactRelationQualified
+    * FactId
+    * RelatedFactId
+    * UserId
+    * Fact qualification
+        * Confirm completely
+        * Confirm partially
+        * Infirm partially
+        * Infirm completely
+        * Not a fact
+* FactUpVoted
+    * FactId
+    * UserId
+* FactDownVoted
+    * FactId
+    * UserId
