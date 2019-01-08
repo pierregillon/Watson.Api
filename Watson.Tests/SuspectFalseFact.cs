@@ -100,7 +100,7 @@ namespace Watson.Tests
         }
 
         [Theory]
-        [InlineData("First, you can start off by reading a basic example dialogue in Romaji, Japanese characters, and then English. Next, you'll find a chart of vocabulary words and common expressions that should be used in a restaurant setting.")]
+        [InlineData("First, you can start off by reading a basic example dialogue in Romaji, Japanese characters, and then English. Next, you'll find a chart of vocabulary words and common expressions that should be used in a restaurant setting. First, you can start off by reading a basic example dialogue in Romaji, Japanese characters, and then English. Next, you'll find a chart of vocabulary words and common expressions that should be used in a restaurant setting.")]
         public async Task throw_exception_when_to_many_words(string wordingSample)
         {
             await Assert.ThrowsAsync<ToManyWords>(async () => {
