@@ -15,7 +15,7 @@ namespace Watson.Tests
         private const string UNREACHABLE_WEB_PAGE = "https://wwww.unreachable/xx.html";
         private const string REACHABLE_WEB_PAGE = "https://wwww.fakenews/president.html";
         private const string SOME_XMAP = "//*[@id=\"content\"]/div/div/div[1]/div/";
-        private const string SOME_WORDING = "test";
+        private const string SOME_WORDING = "This president was fairly elected.";
 
         private ICommandSender _commandSender;
         private IEventPublisher _eventPublisher;
@@ -80,20 +80,37 @@ namespace Watson.Tests
         }
 
         [Theory]
-        [InlineData(null)]
-        [InlineData("")]
-        [InlineData("   ")]
-        public async Task throw_exception_when_invalid_wording(string wording)
+        [InlineData("The president ")]
+        [InlineData("I want")]
+        [InlineData("bad example !")]
+        [InlineData("No.")]
+        [InlineData("inconsistency / magnificent")]
+        public async Task throw_exception_when_not_enough_words(string wordingSample)
         {
-            // Arrange
-            _webSiteChecker.IsOnline(UNREACHABLE_WEB_PAGE).Returns(false);
-
-            // Act
-            await Assert.ThrowsAsync<ArgumentException>(async () =>             {
-                var command = new SuspectFalseFactCommand {
+            await Assert.ThrowsAsync<NotEnoughWords>(async () => {
+                // Arrange
+                var command = new SuspectFalseFactCommand  {
                     WebPageUrl = REACHABLE_WEB_PAGE,
-                    Wording = wording
+                    Wording = wordingSample
                 };
+
+                // Act
+                await _commandSender.Send(command);
+            });
+        }
+
+        [Theory]
+        [InlineData("First, you can start off by reading a basic example dialogue in Romaji, Japanese characters, and then English. Next, you'll find a chart of vocabulary words and common expressions that should be used in a restaurant setting.")]
+        public async Task throw_exception_when_to_many_words(string wordingSample)
+        {
+            await Assert.ThrowsAsync<ToManyWords>(async () => {
+                // Arrange
+                var command = new SuspectFalseFactCommand  {
+                    WebPageUrl = REACHABLE_WEB_PAGE,
+                    Wording = wordingSample
+                };
+
+                // Act
                 await _commandSender.Send(command);
             });
         }
@@ -106,49 +123,6 @@ namespace Watson.Tests
                 var command = new SuspectFalseFactCommand {
                     WebPageUrl = REACHABLE_WEB_PAGE,
                     Wording = SOME_WORDING
-                };
-
-                // Act
-                await _commandSender.Send(command);
-            });
-        }
-
-        [Theory]
-        [InlineData(0, 0)]
-        [InlineData(3, 3)]
-        [InlineData(-1, 1)]
-        [InlineData(1, -1)]
-        [InlineData(10, 1)]
-        public async Task throw_exception_when_invalid_offsets(int startOffset, int endOffset)
-        {
-            await Assert.ThrowsAsync<InvalidHtmlLocationOffsets>(async () => {
-                // Arrange
-                var command = new SuspectFalseFactCommand {
-                    WebPageUrl = REACHABLE_WEB_PAGE,
-                    FirstSelectedHtmlNodeXPath = SOME_XMAP,
-                    LastSelectedHtmlNodeXPath = SOME_XMAP,
-                    Wording = SOME_WORDING,
-                    SelectedTextStartOffset = startOffset,
-                    SelectedTextEndOffset = endOffset
-                };
-
-                // Act
-                await _commandSender.Send(command);
-            });
-        }
-        
-        [Fact]
-        public async Task throw_exception_when_inconsistent_wording_and_offsets()
-        {
-            await Assert.ThrowsAsync<FactWordingAndOffsetInconsistent>(async () => {
-                // Arrange
-                var command = new SuspectFalseFactCommand {
-                    WebPageUrl = REACHABLE_WEB_PAGE,
-                    FirstSelectedHtmlNodeXPath = SOME_XMAP,
-                    LastSelectedHtmlNodeXPath = SOME_XMAP,
-                    Wording = SOME_WORDING,
-                    SelectedTextStartOffset = 0,
-                    SelectedTextEndOffset = SOME_WORDING.Length - 2
                 };
 
                 // Act

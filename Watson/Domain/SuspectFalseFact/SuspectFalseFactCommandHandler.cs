@@ -21,12 +21,12 @@ namespace Watson.Domain.SuspectFalseFact
                 throw new UnreachableWebPage(command.WebPageUrl);
             }
 
-            var fact = new Fact(command.Wording, command.WebPageUrl, new HtmlLocation (
-                command.FirstSelectedHtmlNodeXPath,
-                command.LastSelectedHtmlNodeXPath,
-                command.SelectedTextStartOffset,
-                command.SelectedTextEndOffset
-            ));
+            var fact = new Fact(command.Wording, command.WebPageUrl, new HtmlLocation {
+                FirstNodeXPath = command.FirstSelectedHtmlNodeXPath,
+                LastNodeXPath = command.LastSelectedHtmlNodeXPath,
+                StartOffset = command.SelectedTextStartOffset,
+                EndOffset = command.SelectedTextEndOffset
+            });
 
             await repository.Save(fact);
         }
