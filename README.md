@@ -12,7 +12,7 @@ The api is built using Command Query Response Segregation (CQRS), Domain Driven 
 * [CQRSLite](https://github.com/gautema/CQRSlite)
 
 # In progress
-As a fact checker, I must be able to
+As a member of the Watson fact checker community, I must be able to
 - Indicate investigating fact count in the present web page
 - Link 2 facts
 - Qualify a fact relation (confirm => infirm)
@@ -21,6 +21,10 @@ As a fact checker, I must be able to
 - Indicate a fact is not a fact. Remove needed.
 - Qualify document (scientific, politic, non professional blog) to estimate quality and pertinence
 - Hide unimportant words in a fact, replaced by [...]
+
+# Technical
+- Refactor SuspiciousFactDetected to SuspiciousFactReported ? (Quid associated command)
+- Rework DetectSuspiciousFact command properties names
 
 # Domain event brain storming
 Domain events brain storming :
