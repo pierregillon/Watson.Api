@@ -1,3 +1,5 @@
+[![Build status](https://ci.appveyor.com/api/projects/status/uw4n1wgl996vdm4h?svg=true)](https://ci.appveyor.com/project/pierregillon/watson-api)
+
 # What is Watson ?
 Watson is a collaborative web media fact checker.
 
