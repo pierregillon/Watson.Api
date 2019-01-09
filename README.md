@@ -5,7 +5,7 @@ Watson is a collaborative web media fact checker.
 
 # This is an API. Do you have client side app ?
 For now, the client applications are browser extensions :
-* [For Chrome](https://github.com/pierregillon/Watson.Pluggins.Chrome/blob/master/README.md)
+* [For Chrome](https://github.com/pierregillon/Watson.Pluggins.Chrome)
 
 # How the API is structured ?
 The api is built using Command Query Response Segregation (CQRS), Domain Driven Design (DDD) and Event Sourcing.
@@ -13,14 +13,16 @@ The api is built using Command Query Response Segregation (CQRS), Domain Driven 
 # Libraries
 * [CQRSLite](https://github.com/gautema/CQRSlite)
 
+# Features
+- Highlight text in a web page and report it
+
 # In progress
 As a member of the Watson fact checker community, I must be able to
-- Indicate investigating fact count in the present web page
 - Link 2 facts
 - Qualify a fact relation (confirm => infirm)
 - List all related fact of a fact
-- Indicate a suspected fact is interesting and further investigation needed
-- Indicate a fact is not a fact. Remove needed.
+- Vote a suspected fact is interesting and further investigation needed
+- Vote a fact is not a fact and must be removed
 - Qualify document (scientific, politic, non professional blog) to estimate quality and pertinence
 - Hide unimportant words in a fact, replaced by [...]
 
