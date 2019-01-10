@@ -4,13 +4,13 @@ using CQRSlite.Commands;
 using CQRSlite.Events;
 using NSubstitute;
 using Watson.Domain;
-using Watson.Domain.SuspectFalseFact;
+using Watson.Domain.ReportSuspiciousFact;
 using Watson.Infrastructure;
 using Xunit;
 
 namespace Watson.Tests
 {
-    public class SuspectFalseFact
+    public class ReportSuspiciousFactTests
     {
         private const string UNREACHABLE_WEB_PAGE = "https://wwww.unreachable/xx.html";
         private const string REACHABLE_WEB_PAGE = "https://wwww.fakenews/president.html";
@@ -21,7 +21,7 @@ namespace Watson.Tests
         private IEventPublisher _eventPublisher;
         private IWebSiteChecker _webSiteChecker;
 
-        public SuspectFalseFact()
+        public ReportSuspiciousFactTests()
         {
             var builder = new StructureMapContainerBuilder();
             var container = builder.Build();
@@ -41,7 +41,7 @@ namespace Watson.Tests
         public async Task publish_suspicious_fact_detected()
         {
             // Arrange
-            var command = new SuspectFalseFactCommand {
+            var command = new ReportSuspiciousFactCommand {
                 Wording = "Our president has been elected by more that 60% of the population.",
                 WebPageUrl = "https://wwww.fakenews/president.html",
                 FirstSelectedHtmlNodeXPath = "//*[@id=\"content\"]/div/div/div[1]/div/div/div/div[3]/p[6]",
@@ -70,7 +70,7 @@ namespace Watson.Tests
         {
             await Assert.ThrowsAsync<UnreachableWebPage>(async () => {
                 // Arrange
-                var command = new SuspectFalseFactCommand {
+                var command = new ReportSuspiciousFactCommand {
                     WebPageUrl = UNREACHABLE_WEB_PAGE
                 };
 
@@ -89,7 +89,7 @@ namespace Watson.Tests
         {
             await Assert.ThrowsAsync<NotEnoughWords>(async () => {
                 // Arrange
-                var command = new SuspectFalseFactCommand  {
+                var command = new ReportSuspiciousFactCommand  {
                     WebPageUrl = REACHABLE_WEB_PAGE,
                     Wording = wordingSample
                 };
@@ -105,7 +105,7 @@ namespace Watson.Tests
         {
             await Assert.ThrowsAsync<ToManyWords>(async () => {
                 // Arrange
-                var command = new SuspectFalseFactCommand  {
+                var command = new ReportSuspiciousFactCommand  {
                     WebPageUrl = REACHABLE_WEB_PAGE,
                     Wording = wordingSample
                 };
@@ -120,7 +120,7 @@ namespace Watson.Tests
         {
             await Assert.ThrowsAsync<InvalidHtmlLocation>(async () => {
                 // Arrange
-                var command = new SuspectFalseFactCommand {
+                var command = new ReportSuspiciousFactCommand {
                     WebPageUrl = REACHABLE_WEB_PAGE,
                     Wording = SOME_WORDING
                 };

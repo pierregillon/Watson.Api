@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 
-namespace Watson.Domain.SuspectFalseFact
+namespace Watson.Domain
 {
     public static class StringExtensions
     {

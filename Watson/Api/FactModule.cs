@@ -5,7 +5,7 @@ using CQRSlite.Commands;
 using Nancy.Configuration;
 using Nancy.ModelBinding;
 using Watson.Domain;
-using Watson.Domain.SuspectFalseFact;
+using Watson.Domain.ReportSuspiciousFact;
 
 namespace Watson.Api
 {
@@ -19,7 +19,7 @@ namespace Watson.Api
             });
 
             Post("/api/fact", async _ => {
-                var command = this.Bind<SuspectFalseFactCommand>();
+                var command = this.Bind<ReportSuspiciousFactCommand>();
                 command.WebPageUrl = GetUrlQueryParameter();
                 await dispatcher.Send(command);
                 return "fact added";

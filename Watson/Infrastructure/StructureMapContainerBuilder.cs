@@ -4,7 +4,7 @@ using CQRSlite.Events;
 using Watson.Infrastructure;
 using StructureMap;
 using Watson.Server;
-using Watson.Domain.SuspectFalseFact;
+using Watson.Domain.ReportSuspiciousFact;
 
 namespace Watson.Infrastructure
 {

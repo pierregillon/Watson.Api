@@ -1,7 +1,7 @@
 using System;
 using System.Net;
 using System.Threading.Tasks;
-using Watson.Domain.SuspectFalseFact;
+using Watson.Domain.ReportSuspiciousFact;
 
 namespace Watson.Infrastructure
 {

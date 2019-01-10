@@ -1,7 +1,8 @@
 using System;
 using CQRSlite.Domain;
+using Watson.Domain.ReportSuspiciousFact;
 
-namespace Watson.Domain.SuspectFalseFact
+namespace Watson.Domain
 {
     public class Fact : AggregateRoot
     {

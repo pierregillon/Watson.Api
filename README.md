@@ -27,12 +27,11 @@ As a member of the Watson fact checker community, I must be able to
 - Hide unimportant words in a fact, replaced by [...]
 
 # Technical
-- Refactor SuspiciousFactDetected to SuspiciousFactReported ? (Quid associated command)
 - Rework DetectSuspiciousFact command properties names
 
 # Domain event brain storming
 Domain events brain storming :
-* SuspiciousFactDetected
+* ReportSuspiciousFact
     * FactId
     * Wording
     * Location

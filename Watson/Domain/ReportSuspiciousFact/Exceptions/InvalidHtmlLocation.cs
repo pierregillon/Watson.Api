@@ -1,6 +1,6 @@
 using System;
 
-namespace Watson.Domain.SuspectFalseFact
+namespace Watson.Domain.ReportSuspiciousFact
 {
     public class InvalidHtmlLocation : Exception
     {

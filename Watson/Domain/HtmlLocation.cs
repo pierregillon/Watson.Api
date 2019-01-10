@@ -1,5 +1,5 @@
 using System;
-using Watson.Domain.SuspectFalseFact;
+using Watson.Domain.ReportSuspiciousFact;
 
 namespace Watson.Domain
 {

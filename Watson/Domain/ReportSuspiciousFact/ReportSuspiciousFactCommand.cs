@@ -1,9 +1,9 @@
 using CQRSlite.Commands;
 using Watson.Domain;
 
-namespace Watson.Domain.SuspectFalseFact
+namespace Watson.Domain.ReportSuspiciousFact
 {
-    public class SuspectFalseFactCommand : ICommand
+    public class ReportSuspiciousFactCommand : ICommand
     {
         public string Wording { get; set; }
         public string WebPageUrl { get; set; }

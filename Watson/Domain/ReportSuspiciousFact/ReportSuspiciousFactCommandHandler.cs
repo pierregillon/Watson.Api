@@ -2,20 +2,20 @@ using System.Threading.Tasks;
 using CQRSlite.Commands;
 using CQRSlite.Domain;
 
-namespace Watson.Domain.SuspectFalseFact
+namespace Watson.Domain.ReportSuspiciousFact
 {
-    public class SuspectFalseFactCommandHandler : ICommandHandler<SuspectFalseFactCommand>
+    public class ReportSuspiciousFactCommandHandler : ICommandHandler<ReportSuspiciousFactCommand>
     {
         private readonly IRepository repository;
         private readonly IWebSiteChecker webSiteChecker;
 
-        public SuspectFalseFactCommandHandler(IRepository repository, IWebSiteChecker webSiteChecker)
+        public ReportSuspiciousFactCommandHandler(IRepository repository, IWebSiteChecker webSiteChecker)
         {
             this.repository = repository;
             this.webSiteChecker = webSiteChecker;
         }
 
-        public async Task Handle(SuspectFalseFactCommand command)
+        public async Task Handle(ReportSuspiciousFactCommand command)
         {
             if (await webSiteChecker.IsOnline(command.WebPageUrl) == false) {
                 throw new UnreachableWebPage(command.WebPageUrl);
