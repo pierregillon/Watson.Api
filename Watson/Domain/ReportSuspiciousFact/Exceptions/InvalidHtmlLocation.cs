@@ -2,9 +2,9 @@ using System;
 
 namespace Watson.Domain.ReportSuspiciousFact
 {
-    public class InvalidHtmlLocation : Exception
+    public class InvalidXPathFormat : Exception
     {
-        public InvalidHtmlLocation(string message) : base(message)
+        public InvalidXPathFormat(string message) : base(message)
         {
         }
     }
