@@ -18,7 +18,7 @@ namespace Watson.Api
 
         public Task<IReadOnlyCollection<FactListItem>> GetAll(string webPageUrl)
         {
-            var data = database.Table<FactListItem>().Where(x => x.webPageUrl == webPageUrl).ToArray();
+            var data = database.Table<FactListItem>().Where(x => x.WebPageUrl == webPageUrl).ToArray();
             return Task.FromResult(data).ContinueWith(x => (IReadOnlyCollection<FactListItem>)x.Result);
         }
 
@@ -26,12 +26,12 @@ namespace Watson.Api
         {
             database.Table<FactListItem>()
                     .Add(new FactListItem {
-                        webPageUrl = @event.WebPageUrl,
-                        firstTextNodeXPath = @event.Location.StartNodeXPath.ToString(),
-                        lastTextNodeXPath = @event.Location.EndNodeXPath.ToString(),
-                        startOffset = @event.Location.StartOffset,
-                        endOffset = @event.Location.EndOffset,
-                        wording = @event.Wording
+                        WebPageUrl = @event.WebPageUrl,
+                        StartNodeXPath = @event.Location.StartNodeXPath.ToString(),
+                        EndNodeXPath = @event.Location.EndNodeXPath.ToString(),
+                        StartOffset = @event.Location.StartOffset,
+                        EndOffset = @event.Location.EndOffset,
+                        Wording = @event.Wording
                     });
 
             return Task.Delay(0);
