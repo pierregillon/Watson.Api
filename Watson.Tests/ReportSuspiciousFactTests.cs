@@ -44,10 +44,10 @@ namespace Watson.Tests
             var command = new ReportSuspiciousFactCommand {
                 Wording = "Our president has been elected by more that 60% of the population.",
                 WebPageUrl = "https://wwww.fakenews/president.html",
-                FirstSelectedHtmlNodeXPath = "//*[@id=\"content\"]/div/div/div[1]/div/div/div/div[3]/p[6]/text()",
-                LastSelectedHtmlNodeXPath = "//*[@id=\"content\"]/div/div/div[1]/div/div/div/div[3]/p[6]/text()",
-                SelectedTextStartOffset = 10,
-                SelectedTextEndOffset = 76
+                StartNodeXPath = "//*[@id=\"content\"]/div/div/div[1]/div/div/div/div[3]/p[6]/text()",
+                EndNodeXPath = "//*[@id=\"content\"]/div/div/div[1]/div/div/div/div[3]/p[6]/text()",
+                StartOffset = 10,
+                EndOffset = 76
             };
 
             // Act
@@ -58,10 +58,10 @@ namespace Watson.Tests
                 @event.Id != default(Guid) &&
                 @event.Wording == command.Wording &&
                 @event.WebPageUrl == command.WebPageUrl &&
-                @event.Location.StartNodeXPath.ToString() == command.FirstSelectedHtmlNodeXPath &&
-                @event.Location.EndNodeXPath.ToString() == command.LastSelectedHtmlNodeXPath &&
-                @event.Location.StartOffset == command.SelectedTextStartOffset &&
-                @event.Location.EndOffset == command.SelectedTextEndOffset
+                @event.Location.StartNodeXPath.ToString() == command.StartNodeXPath &&
+                @event.Location.EndNodeXPath.ToString() == command.EndNodeXPath &&
+                @event.Location.StartOffset == command.StartOffset &&
+                @event.Location.EndOffset == command.EndOffset
             ));
         }
 
@@ -92,8 +92,8 @@ namespace Watson.Tests
                 var command = new ReportSuspiciousFactCommand  {
                     WebPageUrl = REACHABLE_WEB_PAGE,
                     Wording = wordingSample,
-                    FirstSelectedHtmlNodeXPath = SOME_XMAP,
-                    LastSelectedHtmlNodeXPath = SOME_XMAP
+                    StartNodeXPath = SOME_XMAP,
+                    EndNodeXPath = SOME_XMAP
                 };
 
                 // Act
@@ -110,8 +110,8 @@ namespace Watson.Tests
                 var command = new ReportSuspiciousFactCommand  {
                     WebPageUrl = REACHABLE_WEB_PAGE,
                     Wording = wordingSample,
-                    FirstSelectedHtmlNodeXPath = SOME_XMAP,
-                    LastSelectedHtmlNodeXPath = SOME_XMAP
+                    StartNodeXPath = SOME_XMAP,
+                    EndNodeXPath = SOME_XMAP
                 };
 
                 // Act
@@ -131,8 +131,8 @@ namespace Watson.Tests
                 var command = new ReportSuspiciousFactCommand {
                     WebPageUrl = REACHABLE_WEB_PAGE,
                     Wording = SOME_WORDING,
-                    FirstSelectedHtmlNodeXPath = beginXPath,
-                    LastSelectedHtmlNodeXPath = endXPath
+                    StartNodeXPath = beginXPath,
+                    EndNodeXPath = endXPath
                 };
 
                 // Act
@@ -153,10 +153,10 @@ namespace Watson.Tests
                 var command = new ReportSuspiciousFactCommand {
                     WebPageUrl = REACHABLE_WEB_PAGE,
                     Wording = SOME_WORDING,
-                    FirstSelectedHtmlNodeXPath = $"/html/body/{beginElement}/text()",
-                    LastSelectedHtmlNodeXPath = $"/html/body/{endElement}/text()",
-                    SelectedTextStartOffset = 0,
-                    SelectedTextEndOffset = 5
+                    StartNodeXPath = $"/html/body/{beginElement}/text()",
+                    EndNodeXPath = $"/html/body/{endElement}/text()",
+                    StartOffset = 0,
+                    EndOffset = 5
                 };
 
                 // Act
@@ -178,10 +178,10 @@ namespace Watson.Tests
                 var command = new ReportSuspiciousFactCommand {
                     WebPageUrl = REACHABLE_WEB_PAGE,
                     Wording = SOME_WORDING,
-                    FirstSelectedHtmlNodeXPath = beginXPath,
-                    LastSelectedHtmlNodeXPath = endXPath,
-                    SelectedTextStartOffset = 0,
-                    SelectedTextEndOffset = 5
+                    StartNodeXPath = beginXPath,
+                    EndNodeXPath = endXPath,
+                    StartOffset = 0,
+                    EndOffset = 5
                 };
 
                 // Act

@@ -22,10 +22,10 @@ namespace Watson.Domain.ReportSuspiciousFact
             }
 
             var fact = new Fact(command.Wording, command.WebPageUrl, new HtmlLocation {
-                StartNodeXPath = XPath.Parse(command.FirstSelectedHtmlNodeXPath),
-                EndNodeXPath = XPath.Parse(command.LastSelectedHtmlNodeXPath),
-                StartOffset = command.SelectedTextStartOffset,
-                EndOffset = command.SelectedTextEndOffset
+                StartNodeXPath = XPath.Parse(command.StartNodeXPath),
+                EndNodeXPath = XPath.Parse(command.EndNodeXPath),
+                StartOffset = command.StartOffset,
+                EndOffset = command.EndOffset
             });
 
             await repository.Save(fact);

@@ -31,8 +31,6 @@ As a member of the Watson fact checker community, I must be able to
 - Hide unimportant words in a fact, replaced by [...]
 
 # Todo list
-- Rework ReportSuspiciousFact command properties names
-- When fact is beeing reported throw error if wording is spread over multiple non dom text element (p, li, ...). Use XPath for this.
 - Move to https
 - Add token authentification
 - Trace api call with elasticsearch
