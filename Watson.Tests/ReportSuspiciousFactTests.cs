@@ -14,7 +14,7 @@ namespace Watson.Tests
     {
         private const string UNREACHABLE_WEB_PAGE = "https://wwww.unreachable/xx.html";
         private const string REACHABLE_WEB_PAGE = "https://wwww.fakenews/president.html";
-        private const string SOME_XMAP = "//*[@id=\"content\"]/div/div/div[1]/div/";
+        private const string SOME_XMAP = "//*[@id=\"content\"]/div/div/div[1]/div/text()";
         private const string SOME_WORDING = "This president was fairly elected.";
 
         private ICommandSender _commandSender;
@@ -58,8 +58,8 @@ namespace Watson.Tests
                 @event.Id != default(Guid) &&
                 @event.Wording == command.Wording &&
                 @event.WebPageUrl == command.WebPageUrl &&
-                @event.Location.FirstNodeXPath == command.FirstSelectedHtmlNodeXPath &&
-                @event.Location.LastNodeXPath == command.LastSelectedHtmlNodeXPath &&
+                @event.Location.StartNodeXPath.ToString() == command.FirstSelectedHtmlNodeXPath &&
+                @event.Location.EndNodeXPath.ToString() == command.LastSelectedHtmlNodeXPath &&
                 @event.Location.StartOffset == command.SelectedTextStartOffset &&
                 @event.Location.EndOffset == command.SelectedTextEndOffset
             ));
@@ -91,7 +91,9 @@ namespace Watson.Tests
                 // Arrange
                 var command = new ReportSuspiciousFactCommand  {
                     WebPageUrl = REACHABLE_WEB_PAGE,
-                    Wording = wordingSample
+                    Wording = wordingSample,
+                    FirstSelectedHtmlNodeXPath = SOME_XMAP,
+                    LastSelectedHtmlNodeXPath = SOME_XMAP
                 };
 
                 // Act
@@ -107,7 +109,9 @@ namespace Watson.Tests
                 // Arrange
                 var command = new ReportSuspiciousFactCommand  {
                     WebPageUrl = REACHABLE_WEB_PAGE,
-                    Wording = wordingSample
+                    Wording = wordingSample,
+                    FirstSelectedHtmlNodeXPath = SOME_XMAP,
+                    LastSelectedHtmlNodeXPath = SOME_XMAP
                 };
 
                 // Act
@@ -142,9 +146,9 @@ namespace Watson.Tests
         [InlineData("p[1]", "p[3]")]
         [InlineData("div[1]", "div[2]")]
         [InlineData("li[1]", "li[2]")]
-        public async Task throw_exception_when_fact_spread_over_multiple_non_dom_text_elements(string beginElement, string endElement)
+        public async Task throw_exception_when_fact_spread_over_multiple_paragraphs(string beginElement, string endElement)
         {
-            await Assert.ThrowsAsync<FactSpreadOverMultipleNonDomTextElements>(async () => {
+            await Assert.ThrowsAsync<FactSpreadOverMultipleParagraphs>(async () => {
                 // Arrange
                 var command = new ReportSuspiciousFactCommand {
                     WebPageUrl = REACHABLE_WEB_PAGE,
@@ -166,7 +170,7 @@ namespace Watson.Tests
         [InlineData("/html/body/p/text()[1]", "/html/body/p/a/strong/text()")]
         [InlineData("/html/body/p/a/text()", "/html/body/p/strong/text()")]
         [InlineData("/html/body/p/a/text()", "/html/body/p/span/text()")]
-        public async Task do_not_throw_exception_when_fact_in_same_dom_text_element(string beginXPath, string endXPath)
+        public async Task do_not_throw_exception_when_fact_in_same_paragraph(string beginXPath, string endXPath)
         {
             try
             {
@@ -183,7 +187,7 @@ namespace Watson.Tests
                 // Act
                 await _commandSender.Send(command);
             }
-            catch (FactSpreadOverMultipleNonDomTextElements) {
+            catch (FactSpreadOverMultipleParagraphs) {
                 throw;
             }
             catch{}

@@ -22,8 +22,8 @@ namespace Watson.Domain.ReportSuspiciousFact
             }
 
             var fact = new Fact(command.Wording, command.WebPageUrl, new HtmlLocation {
-                FirstNodeXPath = command.FirstSelectedHtmlNodeXPath,
-                LastNodeXPath = command.LastSelectedHtmlNodeXPath,
+                StartNodeXPath = XPath.Parse(command.FirstSelectedHtmlNodeXPath),
+                EndNodeXPath = XPath.Parse(command.LastSelectedHtmlNodeXPath),
                 StartOffset = command.SelectedTextStartOffset,
                 EndOffset = command.SelectedTextEndOffset
             });
