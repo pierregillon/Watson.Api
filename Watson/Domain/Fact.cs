@@ -24,8 +24,8 @@ namespace Watson.Domain
                 throw new ToManyWords(MAXIMUM_WORD_COUNT);
             }
 
-            if (string.IsNullOrEmpty(location.FirstNodeXPath) || string.IsNullOrEmpty(location.LastNodeXPath)) {
-                throw new InvalidHtmlLocation("Both node Xmap should be defined.");
+            if(location.StartNodeXPath.IsInSameParagraph(location.EndNodeXPath) == false) {
+                throw new FactSpreadOverMultipleParagraphs();
             }
             
             ApplyChange(new SuspiciousFactDetected(Guid.NewGuid(), wording, webPageUrl, location));

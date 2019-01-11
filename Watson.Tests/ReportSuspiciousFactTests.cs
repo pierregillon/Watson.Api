@@ -14,7 +14,7 @@ namespace Watson.Tests
     {
         private const string UNREACHABLE_WEB_PAGE = "https://wwww.unreachable/xx.html";
         private const string REACHABLE_WEB_PAGE = "https://wwww.fakenews/president.html";
-        private const string SOME_XMAP = "//*[@id=\"content\"]/div/div/div[1]/div/";
+        private const string SOME_XMAP = "//*[@id=\"content\"]/div/div/div[1]/div/text()";
         private const string SOME_WORDING = "This president was fairly elected.";
 
         private ICommandSender _commandSender;
@@ -44,8 +44,8 @@ namespace Watson.Tests
             var command = new ReportSuspiciousFactCommand {
                 Wording = "Our president has been elected by more that 60% of the population.",
                 WebPageUrl = "https://wwww.fakenews/president.html",
-                FirstSelectedHtmlNodeXPath = "//*[@id=\"content\"]/div/div/div[1]/div/div/div/div[3]/p[6]",
-                LastSelectedHtmlNodeXPath = "//*[@id=\"content\"]/div/div/div[1]/div/div/div/div[3]/p[6]",
+                FirstSelectedHtmlNodeXPath = "//*[@id=\"content\"]/div/div/div[1]/div/div/div/div[3]/p[6]/text()",
+                LastSelectedHtmlNodeXPath = "//*[@id=\"content\"]/div/div/div[1]/div/div/div/div[3]/p[6]/text()",
                 SelectedTextStartOffset = 10,
                 SelectedTextEndOffset = 76
             };
@@ -58,8 +58,8 @@ namespace Watson.Tests
                 @event.Id != default(Guid) &&
                 @event.Wording == command.Wording &&
                 @event.WebPageUrl == command.WebPageUrl &&
-                @event.Location.FirstNodeXPath == command.FirstSelectedHtmlNodeXPath &&
-                @event.Location.LastNodeXPath == command.LastSelectedHtmlNodeXPath &&
+                @event.Location.StartNodeXPath.ToString() == command.FirstSelectedHtmlNodeXPath &&
+                @event.Location.EndNodeXPath.ToString() == command.LastSelectedHtmlNodeXPath &&
                 @event.Location.StartOffset == command.SelectedTextStartOffset &&
                 @event.Location.EndOffset == command.SelectedTextEndOffset
             ));
@@ -91,7 +91,9 @@ namespace Watson.Tests
                 // Arrange
                 var command = new ReportSuspiciousFactCommand  {
                     WebPageUrl = REACHABLE_WEB_PAGE,
-                    Wording = wordingSample
+                    Wording = wordingSample,
+                    FirstSelectedHtmlNodeXPath = SOME_XMAP,
+                    LastSelectedHtmlNodeXPath = SOME_XMAP
                 };
 
                 // Act
@@ -107,7 +109,9 @@ namespace Watson.Tests
                 // Arrange
                 var command = new ReportSuspiciousFactCommand  {
                     WebPageUrl = REACHABLE_WEB_PAGE,
-                    Wording = wordingSample
+                    Wording = wordingSample,
+                    FirstSelectedHtmlNodeXPath = SOME_XMAP,
+                    LastSelectedHtmlNodeXPath = SOME_XMAP
                 };
 
                 // Act
@@ -115,19 +119,78 @@ namespace Watson.Tests
             });
         }
 
-        [Fact]
-        public async Task throw_exception_when_invalid_html_xmap_location()
+        [Theory]
+        [InlineData(null, null)]
+        [InlineData("", "")]
+        [InlineData("qsf", "abjlqsdfj")]
+        [InlineData("/html", "/html")]
+        public async Task throw_exception_when_invalid_html_xmap_location(string beginXPath, string endXPath)
         {
-            await Assert.ThrowsAsync<InvalidHtmlLocation>(async () => {
+            await Assert.ThrowsAsync<InvalidXPathFormat>(async () => {
                 // Arrange
                 var command = new ReportSuspiciousFactCommand {
                     WebPageUrl = REACHABLE_WEB_PAGE,
-                    Wording = SOME_WORDING
+                    Wording = SOME_WORDING,
+                    FirstSelectedHtmlNodeXPath = beginXPath,
+                    LastSelectedHtmlNodeXPath = endXPath
                 };
 
                 // Act
                 await _commandSender.Send(command);
             });
+        }
+
+        [Theory]
+        [InlineData("p", "div")]
+        [InlineData("p[1]", "p[2]")]
+        [InlineData("p[1]", "p[3]")]
+        [InlineData("div[1]", "div[2]")]
+        [InlineData("li[1]", "li[2]")]
+        public async Task throw_exception_when_fact_spread_over_multiple_paragraphs(string beginElement, string endElement)
+        {
+            await Assert.ThrowsAsync<FactSpreadOverMultipleParagraphs>(async () => {
+                // Arrange
+                var command = new ReportSuspiciousFactCommand {
+                    WebPageUrl = REACHABLE_WEB_PAGE,
+                    Wording = SOME_WORDING,
+                    FirstSelectedHtmlNodeXPath = $"/html/body/{beginElement}/text()",
+                    LastSelectedHtmlNodeXPath = $"/html/body/{endElement}/text()",
+                    SelectedTextStartOffset = 0,
+                    SelectedTextEndOffset = 5
+                };
+
+                // Act
+                await _commandSender.Send(command);
+            });
+        }
+
+        [Theory]
+        [InlineData("/html/body/p[1]/text()", "/html/body/p[1]/span/span/text()")]
+        [InlineData("/html/body/p/text()[1]", "/html/body/p/text()[4]")]
+        [InlineData("/html/body/p/text()[1]", "/html/body/p/a/strong/text()")]
+        [InlineData("/html/body/p/a/text()", "/html/body/p/strong/text()")]
+        [InlineData("/html/body/p/a/text()", "/html/body/p/span/text()")]
+        public async Task do_not_throw_exception_when_fact_in_same_paragraph(string beginXPath, string endXPath)
+        {
+            try
+            {
+                // Arrange
+                var command = new ReportSuspiciousFactCommand {
+                    WebPageUrl = REACHABLE_WEB_PAGE,
+                    Wording = SOME_WORDING,
+                    FirstSelectedHtmlNodeXPath = beginXPath,
+                    LastSelectedHtmlNodeXPath = endXPath,
+                    SelectedTextStartOffset = 0,
+                    SelectedTextEndOffset = 5
+                };
+
+                // Act
+                await _commandSender.Send(command);
+            }
+            catch (FactSpreadOverMultipleParagraphs) {
+                throw;
+            }
+            catch{}
         }
     }
 }

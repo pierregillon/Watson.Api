@@ -27,8 +27,8 @@ namespace Watson.Api
             database.Table<FactListItem>()
                     .Add(new FactListItem {
                         webPageUrl = @event.WebPageUrl,
-                        firstTextNodeXPath = @event.Location.FirstNodeXPath,
-                        lastTextNodeXPath = @event.Location.LastNodeXPath,
+                        firstTextNodeXPath = @event.Location.StartNodeXPath.ToString(),
+                        lastTextNodeXPath = @event.Location.EndNodeXPath.ToString(),
                         startOffset = @event.Location.StartOffset,
                         endOffset = @event.Location.EndOffset,
                         wording = @event.Wording
