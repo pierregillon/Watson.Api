@@ -170,6 +170,7 @@ namespace Watson.Tests
         [InlineData("/html/body/p/text()[1]", "/html/body/p/a/strong/text()")]
         [InlineData("/html/body/p/a/text()", "/html/body/p/strong/text()")]
         [InlineData("/html/body/p/a/text()", "/html/body/p/span/text()")]
+        [InlineData("/html/body/p/a/text()", "/html/body/p/em/text()")]
         public async Task do_not_throw_exception_when_fact_in_same_paragraph(string beginXPath, string endXPath)
         {
             try
