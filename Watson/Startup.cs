@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CQRSlite.Events;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Nancy.Owin;
+using StructureMap;
 
 namespace Watson.Server
 {
@@ -27,6 +29,16 @@ namespace Watson.Server
             }
 
             app.UseOwin(x => x.UseNancy());
+        }
+
+        public async void Initialize(IContainer container)
+        {
+            var eventStore = container.GetInstance<Watson.Infrastructure.EventStore>();
+            var eventPublisher = container.GetInstance<IEventPublisher>();
+            var events = await eventStore.GetAllEventsFromBegining();
+            foreach (var @event in events) {
+                await eventPublisher.Publish(@event);
+            }
         }
     }
 }
