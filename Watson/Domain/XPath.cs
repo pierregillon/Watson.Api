@@ -12,10 +12,10 @@ namespace Watson.Domain
 
         public static XPath Parse(string xPathString)
         {
-            if(string.IsNullOrEmpty(xPathString)) {
+            if (string.IsNullOrEmpty(xPathString)) {
                 throw new InvalidXPathFormat();
             }
-            if(_xPathRegex.IsMatch(xPathString) == false) {
+            if (_xPathRegex.IsMatch(xPathString) == false) {
                 throw new InvalidXPathFormat();
             }
 
@@ -25,7 +25,9 @@ namespace Watson.Domain
         private readonly string _xPathString;
         private readonly string[] _hierarchy;
 
-        private XPath(string xPathString)
+        public string XPathString { get { return _xPathString;} }
+
+        public XPath(string xPathString)
         {
             _xPathString = xPathString;
             _hierarchy = xPathString.Split("/");

@@ -11,15 +11,15 @@ using Newtonsoft.Json;
 
 namespace Watson.Infrastructure
 {
-    public class EventStore : IEventStore
+    public class EventStoreOrg : IEventStore
     {
         private const int EVENT_COUNT = 200;
         private IEventStoreConnection _connection;
         private static readonly Type[] _types = Assembly.GetExecutingAssembly().GetTypes();
 
-        public EventStore()
+        public EventStoreOrg(string server, int port = 1113, string login = "admin", string password = "changeit")
         {
-            _connection = EventStoreConnection.Create(new Uri("tcp://admin:changeit@localhost:1113"),"InputFromFileConsoleApp");
+            _connection = EventStoreConnection.Create(new Uri($"tcp://{login}:{password}@{server}:{port}"), "Watson.Api");
         }
 
         public async Task Connect()
@@ -36,11 +36,12 @@ namespace Watson.Infrastructure
                 .ToArray();
         }
 
-        public async Task<IEnumerable<IEvent>> GetAllEventsFromBegining()
+        public async Task<IEnumerable<IEvent>> ReadAllEventsFromBeginning()
         {
             var streamEvents = await ReadAllEvents();
 
             return streamEvents
+                .Where(x => x.OriginalStreamId.StartsWith("$") == false)
                 .Select(ConvertToDomainEvent)
                 .ToArray();
         }
@@ -62,8 +63,8 @@ namespace Watson.Infrastructure
                     data: Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(@event)),
                     metadata: null
                 );
-
-                await _connection.AppendToStreamAsync(@event.Id.ToString(), @event.Version, eventData);
+                var version = @event.Version == 1 ? ExpectedVersion.NoStream : @event.Version;
+                await _connection.AppendToStreamAsync(@event.Id.ToString(), version, eventData);
             }
         }
 

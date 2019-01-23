@@ -3,7 +3,7 @@ using Watson.Domain.ReportSuspiciousFact;
 
 namespace Watson.Domain
 {
-    public struct HtmlLocation
+    public class HtmlLocation
     {
         public XPath StartNodeXPath { get; set; }
         public XPath EndNodeXPath { get; set; }
