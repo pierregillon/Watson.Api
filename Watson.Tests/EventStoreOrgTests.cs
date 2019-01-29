@@ -13,7 +13,7 @@ namespace Watson.Tests
 
         public EventStoreTests()
         {
-            _eventStore = new EventStoreOrg("localhost");
+            _eventStore = new EventStoreOrg(new ConsoleLogger(), "localhost");
             _eventStore.Connect().Wait();
         }
 

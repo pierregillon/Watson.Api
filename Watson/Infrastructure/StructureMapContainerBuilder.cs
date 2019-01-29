@@ -5,6 +5,7 @@ using Watson.Infrastructure;
 using StructureMap;
 using Watson.Server;
 using Watson.Domain.ReportSuspiciousFact;
+using EventStore.ClientAPI;
 
 namespace Watson.Infrastructure
 {
@@ -19,6 +20,7 @@ namespace Watson.Infrastructure
                 x.For(typeof(IRepository)).Use(typeof(Repository));
                 x.For<IWebSiteChecker>().Use<HttpWebRequestChecker>();
                 x.For<InMemoryDatabase>().Singleton();
+                x.For<ILogger>().Use<ConsoleLogger>();
 
                 x.For<EventStoreOrg>()
                     .Use<EventStoreOrg>()
