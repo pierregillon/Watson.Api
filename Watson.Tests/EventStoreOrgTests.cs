@@ -21,7 +21,7 @@ namespace Watson.Tests
             _eventStore.Connect("localhost").Wait();
         }
 
-        [Fact]
+        [Fact(Skip = "eventstore")]
         public async Task read_all_events()
         {
             // Act
@@ -31,7 +31,7 @@ namespace Watson.Tests
             Assert.NotEqual(0, events.Count());
         }
 
-        [Fact]
+        [Fact(Skip = "eventstore")]
         public async Task save_new_event()
         {
             // Arrange
