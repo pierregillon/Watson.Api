@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using CQRSlite.Events;
 using System;
+using NSubstitute;
 
 namespace Watson.Tests
 {
@@ -13,8 +14,11 @@ namespace Watson.Tests
 
         public EventStoreTests()
         {
-            _eventStore = new EventStoreOrg(new ConsoleLogger(), "localhost");
-            _eventStore.Connect().Wait();
+            var typeLocator = Substitute.For<ITypeLocator>();
+            typeLocator.Find("MyEvent").Returns(typeof(MyEvent));
+
+            _eventStore = new EventStoreOrg(new ConsoleLogger(), typeLocator);
+            _eventStore.Connect("localhost").Wait();
         }
 
         [Fact]

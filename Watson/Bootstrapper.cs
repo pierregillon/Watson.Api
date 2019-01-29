@@ -23,8 +23,8 @@ namespace Watson.Server
             var eventStore = container.GetInstance<EventStoreOrg>();
             var eventPublisher = container.GetInstance<IEventPublisher>();
 
-            logger.Info($"* Connecting to eventstore {eventStore} ...");
-            await eventStore.Connect();
+            logger.Info($"* Connecting to eventstore ...");
+            await eventStore.Connect("localhost");
             logger.Info($"* Reading all events from beginning ...");
             var events = await eventStore.ReadAllEventsFromBeginning();
             foreach (var @event in events) {

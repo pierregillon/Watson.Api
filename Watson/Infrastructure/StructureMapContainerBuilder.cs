@@ -21,11 +21,8 @@ namespace Watson.Infrastructure
                 x.For<IWebSiteChecker>().Use<HttpWebRequestChecker>();
                 x.For<InMemoryDatabase>().Singleton();
                 x.For<ILogger>().Use<ConsoleLogger>();
-
-                x.For<EventStoreOrg>()
-                    .Use<EventStoreOrg>()
-                    .Ctor<string>("server").Is("localhost")
-                    .Singleton();
+                x.For<ITypeLocator>().Use<ReflectionTypeLocator>();
+                x.For<EventStoreOrg>().Use<EventStoreOrg>().Singleton();
 
                 x.For<IEventStore>().Use(c => c.GetInstance<EventStoreOrg>());
 

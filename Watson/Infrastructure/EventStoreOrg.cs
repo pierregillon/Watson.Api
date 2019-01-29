@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading;
@@ -15,17 +14,16 @@ namespace Watson.Infrastructure
     public class EventStoreOrg : IEventStore
     {
         private const int EVENT_COUNT = 200;
-        private static readonly Type[] _types = Assembly.GetExecutingAssembly().GetTypes();
 
         private IEventStoreConnection _connection;
         private readonly JsonSerializerSettings _serializerSettings;
         private readonly ILogger _logger;
-        private readonly Uri _address;
+        private readonly ITypeLocator _typeLocator;
 
-        public EventStoreOrg(ILogger logger, string server, int port = 1113, string login = "admin", string password = "changeit")
+        public EventStoreOrg(ILogger logger, ITypeLocator typeLocator)
         {
-            _address = new Uri($"tcp://{login}:{password}@{server}:{port}");
-            _connection = EventStoreConnection.Create(_address, "Watson.Api");
+            _logger = logger;
+            _typeLocator = typeLocator;
 
             var jsonResolver = new PropertyCleanerSerializerContractResolver();
             jsonResolver.IgnoreProperty(typeof(IEvent), "Version", "TimeStamp");
@@ -35,13 +33,13 @@ namespace Watson.Infrastructure
                 ContractResolver = jsonResolver,
                 Formatting = Formatting.Indented
             };
-            this._logger = logger;
         }
 
         // ----- Public methods
 
-        public async Task Connect()
+        public async Task Connect(string server, int port = 1113, string login = "admin", string password = "changeit")
         {
+            _connection = EventStoreConnection.Create(new Uri($"tcp://{login}:{password}@{server}:{port}"), "Watson.Api");
             await _connection.ConnectAsync();
         }
 
@@ -60,7 +58,7 @@ namespace Watson.Infrastructure
 
             return streamEvents
                 .Where(x => x.OriginalStreamId.StartsWith("$") == false)
-                .Select(ConvertToDomainEvent)
+                .Select(TryConvertToDomainEvent)
                 .Where(x => x != null)
                 .ToArray();
         }
@@ -81,24 +79,31 @@ namespace Watson.Infrastructure
             }
         }
 
-        public override string ToString()
-        {
-            return _address.ToString();
-        }
-
         // ----- Internal logics
 
         private IEvent ConvertToDomainEvent(ResolvedEvent @event)
         {
             var json = Encoding.UTF8.GetString(@event.Event.Data);
-            var type = _types.SingleOrDefault(x => x.Name == @event.Event.EventType);
+            var type = _typeLocator.Find(@event.Event.EventType);
             if (type == null) {
-                _logger.Error(new UnknownEvent(@event.Event.EventType), null);
-                return null;
+                throw new UnknownEvent(@event.Event.EventType);
             }
             var domainEvent = (IEvent)JsonConvert.DeserializeObject(json, type, _serializerSettings);
             domainEvent.Version = (int)@event.OriginalEventNumber;
             return (IEvent)domainEvent;
+        }
+
+        private IEvent TryConvertToDomainEvent(ResolvedEvent @event)
+        {
+            try
+            {
+                return ConvertToDomainEvent(@event);
+            }
+            catch (UnknownEvent ex)
+            {
+                _logger.Error(ex, null);
+                return null;
+            }
         }
 
         private async Task<IEnumerable<ResolvedEvent>> ReadAllEventsInStream(string streamId)
