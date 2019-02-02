@@ -10,7 +10,7 @@ namespace Watson.Domain
         private const int MINIMUM_WORD_COUNT = 3;
 
         public Fact(){}
-        public Fact(string wording, string webPageUrl, HtmlLocation location)
+        public Fact(string wording, string webPageUrl, XPath startNodeXPath, int startOffset, XPath endNodeXPath, int endOffset)
         {
             if (string.IsNullOrEmpty(wording)) {
                 throw new ArgumentException("wording", nameof(wording));
@@ -24,11 +24,16 @@ namespace Watson.Domain
                 throw new ToManyWords(MAXIMUM_WORD_COUNT);
             }
 
-            if (location.StartNodeXPath.IsInSameParagraph(location.EndNodeXPath) == false) {
+            if (startNodeXPath.IsInSameParagraph(endNodeXPath) == false) {
                 throw new FactSpreadOverMultipleParagraphs();
             }
             
-            ApplyChange(new SuspiciousFactDetected(Guid.NewGuid(), wording.Clear(), webPageUrl, location));
+            ApplyChange(new SuspiciousFactDetected(Guid.NewGuid(), wording.Clear(), webPageUrl, new HtmlLocation() {
+                StartNodeXPath = startNodeXPath.ToString(),
+                StartOffset = startOffset,
+                EndNodeXPath = endNodeXPath.ToString(),
+                EndOffset = endOffset
+            }));
         }
 
         private void Apply(SuspiciousFactDetected @event) 

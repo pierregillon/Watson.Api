@@ -21,12 +21,14 @@ namespace Watson.Domain.ReportSuspiciousFact
                 throw new UnreachableWebPage(command.WebPageUrl);
             }
 
-            var fact = new Fact(command.Wording, command.WebPageUrl, new HtmlLocation {
-                StartNodeXPath = XPath.Parse(command.StartNodeXPath),
-                EndNodeXPath = XPath.Parse(command.EndNodeXPath),
-                StartOffset = command.StartOffset,
-                EndOffset = command.EndOffset
-            });
+            var fact = new Fact (
+                command.Wording, 
+                command.WebPageUrl,
+                XPath.Parse(command.StartNodeXPath),
+                command.StartOffset,
+                XPath.Parse(command.EndNodeXPath),
+                command.EndOffset
+            );
 
             await repository.Save(fact);
         }
