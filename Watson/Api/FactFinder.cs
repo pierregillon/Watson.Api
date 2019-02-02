@@ -16,15 +16,28 @@ namespace Watson.Api
             this.database = database;
         }
 
-        public Task<IReadOnlyCollection<FactListItem>> Get(string webPageUrl)
+        public Task<IReadOnlyCollection<FactListItem>> Get(string webPageUrl, int? skip = null, int? take = null)
         {
-            var data = (IReadOnlyCollection<FactListItem>)database.Table<FactListItem>().Where(x => x.WebPageUrl == webPageUrl).ToArray();
-            return Task.FromResult(data);
+            var data = (IEnumerable<FactListItem>)database.Table<FactListItem>().Where(x => x.WebPageUrl == webPageUrl);
+            if (skip.HasValue) {
+                data = data.Skip(skip.Value);
+            }
+            if (take.HasValue) {
+                data = data.Take(take.Value);
+            }
+            return Task.FromResult((IReadOnlyCollection<FactListItem>)data.ToArray());
         }
 
-        public Task<IReadOnlyCollection<FactListItem>> GetAll()
+        public Task<IReadOnlyCollection<FactListItem>> GetAll(int? skip = null, int? take = null)
         {
-            return Task.FromResult((IReadOnlyCollection<FactListItem>)database.Table<FactListItem>());
+            var data = (IEnumerable<FactListItem>)database.Table<FactListItem>();
+            if (skip.HasValue) {
+                data = data.Skip(skip.Value);
+            }
+            if (take.HasValue) {
+                data = data.Take(take.Value);
+            }
+            return Task.FromResult((IReadOnlyCollection<FactListItem>)data.ToArray());
         }
 
         public Task Handle(SuspiciousFactDetected @event)

@@ -38,7 +38,6 @@ As a member of the Watson fact checker community, I must be able to
 - Prepare linux server to host api
 - Configure automatic deployment when new release pushed on git (appveyor)
 - Xmap json format
-- Api to read all facts
 - Custom error return ? exception vs user friendly message ?
 
 # Domain event brain storming
