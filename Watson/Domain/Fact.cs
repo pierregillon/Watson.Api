@@ -12,6 +12,23 @@ namespace Watson.Domain
         public Fact(){}
         public Fact(string wording, string webPageUrl, XPath startNodeXPath, int startOffset, XPath endNodeXPath, int endOffset)
         {
+            CheckWordCount(wording);
+
+            if (startNodeXPath.IsInSameParagraph(endNodeXPath) == false) {
+                throw new FactSpreadOverMultipleParagraphs();
+            }
+
+            ApplyChange(new SuspiciousFactDetected(Guid.NewGuid(), wording.Clear(), webPageUrl, new HtmlLocation()
+            {
+                StartNodeXPath = startNodeXPath.ToString(),
+                StartOffset = startOffset,
+                EndNodeXPath = endNodeXPath.ToString(),
+                EndOffset = endOffset
+            }));
+        }
+
+        private static void CheckWordCount(string wording)
+        {
             if (string.IsNullOrEmpty(wording)) {
                 throw new ArgumentException("wording", nameof(wording));
             }
@@ -23,17 +40,6 @@ namespace Watson.Domain
             else if (wordCount > MAXIMUM_WORD_COUNT) {
                 throw new ToManyWords(MAXIMUM_WORD_COUNT);
             }
-
-            if (startNodeXPath.IsInSameParagraph(endNodeXPath) == false) {
-                throw new FactSpreadOverMultipleParagraphs();
-            }
-            
-            ApplyChange(new SuspiciousFactDetected(Guid.NewGuid(), wording.Clear(), webPageUrl, new HtmlLocation() {
-                StartNodeXPath = startNodeXPath.ToString(),
-                StartOffset = startOffset,
-                EndNodeXPath = endNodeXPath.ToString(),
-                EndOffset = endOffset
-            }));
         }
 
         private void Apply(SuspiciousFactDetected @event) 
