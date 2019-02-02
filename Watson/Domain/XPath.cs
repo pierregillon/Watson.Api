@@ -25,12 +25,10 @@ namespace Watson.Domain
         private readonly string _xPathString;
         private readonly string[] _hierarchy;
 
-        public string XPathString { get { return _xPathString;} }
-
-        public XPath(string xPathString)
+        private XPath(string xPathString)
         {
             _xPathString = xPathString;
-            _hierarchy = xPathString.Split("/");
+            _hierarchy = xPathString.Split("/", StringSplitOptions.RemoveEmptyEntries);
         }
 
         public bool IsInSameParagraph(XPath other)
