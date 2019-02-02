@@ -20,15 +20,15 @@ namespace Watson.Domain
             if (wordCount < MINIMUM_WORD_COUNT) {
                 throw new NotEnoughWords(MINIMUM_WORD_COUNT);
             }
-            else if( wordCount > MAXIMUM_WORD_COUNT) {
+            else if (wordCount > MAXIMUM_WORD_COUNT) {
                 throw new ToManyWords(MAXIMUM_WORD_COUNT);
             }
 
-            if(location.StartNodeXPath.IsInSameParagraph(location.EndNodeXPath) == false) {
+            if (location.StartNodeXPath.IsInSameParagraph(location.EndNodeXPath) == false) {
                 throw new FactSpreadOverMultipleParagraphs();
             }
             
-            ApplyChange(new SuspiciousFactDetected(Guid.NewGuid(), wording, webPageUrl, location));
+            ApplyChange(new SuspiciousFactDetected(Guid.NewGuid(), wording.Clear(), webPageUrl, location));
         }
 
         private void Apply(SuspiciousFactDetected @event) 

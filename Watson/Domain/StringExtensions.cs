@@ -13,5 +13,10 @@ namespace Watson.Domain
                 .Split(_wordSeparators, int.MaxValue, StringSplitOptions.RemoveEmptyEntries)
                 .Count();
         }
+
+        public static string Clear(this string sentence)
+        {
+            return string.Join(' ', sentence.Split(" ", StringSplitOptions.RemoveEmptyEntries));
+        }
     }
 }

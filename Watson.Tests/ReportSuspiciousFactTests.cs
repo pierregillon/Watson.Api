@@ -14,7 +14,7 @@ namespace Watson.Tests
     {
         private const string UNREACHABLE_WEB_PAGE = "https://wwww.unreachable/xx.html";
         private const string REACHABLE_WEB_PAGE = "https://wwww.fakenews/president.html";
-        private const string SOME_XMAP = "//*[@id=\"content\"]/div/div/div[1]/div/text()";
+        private const string SOME_XPATH = "//*[@id=\"content\"]/div/div/div[1]/div/text()";
         private const string SOME_WORDING = "This president was fairly elected.";
 
         private ICommandSender _commandSender;
@@ -66,6 +66,28 @@ namespace Watson.Tests
         }
 
         [Fact]
+        public async Task clear_wording_from_duplicated_spaces()
+        {
+            // Arrange
+            var command = new ReportSuspiciousFactCommand {
+                Wording = "Our president has been elected                   by more that 60% of the population.",
+                WebPageUrl = REACHABLE_WEB_PAGE,
+                StartNodeXPath = SOME_XPATH,
+                EndNodeXPath = SOME_XPATH,
+                StartOffset = 10,
+                EndOffset = 76
+            };
+
+            // Act
+            await _commandSender.Send(command);
+
+            // Assert
+            await _eventPublisher.Received(1).Publish(Arg.Is<SuspiciousFactDetected>(@event =>
+                @event.Wording == "Our president has been elected by more that 60% of the population."
+            ));
+        }
+
+        [Fact]
         public async Task throw_exception_when_web_page_unreachable()
         {
             await Assert.ThrowsAsync<UnreachableWebPage>(async () => {
@@ -92,8 +114,8 @@ namespace Watson.Tests
                 var command = new ReportSuspiciousFactCommand  {
                     WebPageUrl = REACHABLE_WEB_PAGE,
                     Wording = wordingSample,
-                    StartNodeXPath = SOME_XMAP,
-                    EndNodeXPath = SOME_XMAP
+                    StartNodeXPath = SOME_XPATH,
+                    EndNodeXPath = SOME_XPATH
                 };
 
                 // Act
@@ -110,8 +132,8 @@ namespace Watson.Tests
                 var command = new ReportSuspiciousFactCommand  {
                     WebPageUrl = REACHABLE_WEB_PAGE,
                     Wording = wordingSample,
-                    StartNodeXPath = SOME_XMAP,
-                    EndNodeXPath = SOME_XMAP
+                    StartNodeXPath = SOME_XPATH,
+                    EndNodeXPath = SOME_XPATH
                 };
 
                 // Act
