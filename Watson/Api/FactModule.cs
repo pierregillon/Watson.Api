@@ -15,7 +15,12 @@ namespace Watson.Api
         {
             Get("/api/fact", async _ => {
                 var url = GetUrlQueryParameter();
-                return await factFinder.GetAll(url);
+                if (string.IsNullOrEmpty(url)) {
+                    return await factFinder.GetAll();
+                }
+                else {
+                    return await factFinder.Get(url);
+                }
             });
 
             Post("/api/fact", async _ => {
@@ -29,6 +34,9 @@ namespace Watson.Api
         private string GetUrlQueryParameter()
         {
             var base64Url = (string)this.Request.Query["url"];
+            if (base64Url == null) {
+                return null;
+            }
             var url = Encoding.UTF8.GetString(Convert.FromBase64String(base64Url));;
             if (string.IsNullOrEmpty(url))
                 throw new Exception("url parameter must be specified");

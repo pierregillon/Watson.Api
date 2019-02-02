@@ -16,10 +16,15 @@ namespace Watson.Api
             this.database = database;
         }
 
-        public Task<IReadOnlyCollection<FactListItem>> GetAll(string webPageUrl)
+        public Task<IReadOnlyCollection<FactListItem>> Get(string webPageUrl)
         {
-            var data = database.Table<FactListItem>().Where(x => x.WebPageUrl == webPageUrl).ToArray();
-            return Task.FromResult(data).ContinueWith(x => (IReadOnlyCollection<FactListItem>)x.Result);
+            var data = (IReadOnlyCollection<FactListItem>)database.Table<FactListItem>().Where(x => x.WebPageUrl == webPageUrl).ToArray();
+            return Task.FromResult(data);
+        }
+
+        public Task<IReadOnlyCollection<FactListItem>> GetAll()
+        {
+            return Task.FromResult((IReadOnlyCollection<FactListItem>)database.Table<FactListItem>());
         }
 
         public Task Handle(SuspiciousFactDetected @event)
