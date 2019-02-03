@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using EventStore.ClientAPI;
 
 namespace Watson.Infrastructure
@@ -43,7 +44,12 @@ namespace Watson.Infrastructure
         {
             var beforeColor = Console.ForegroundColor;
             Console.ForegroundColor = color;
-            Console.WriteLine(format, args);
+            if (args == null || args.Any() == false)     {
+                Console.WriteLine(format);
+            }
+            else {
+                Console.WriteLine(format, args);
+            }
             Console.ForegroundColor = beforeColor;
         }
     }

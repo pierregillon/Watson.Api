@@ -3,8 +3,6 @@ using Nancy.Bootstrappers.StructureMap;
 using StructureMap;
 using Nancy.Bootstrapper;
 using CQRSlite.Events;
-using System;
-using System.Diagnostics;
 using EventStore.ClientAPI;
 
 namespace Watson.Server
