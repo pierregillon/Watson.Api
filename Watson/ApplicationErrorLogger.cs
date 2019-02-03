@@ -24,7 +24,7 @@ namespace Watson.Server
                     StackTrace = ex.StackTrace,
                     Details = BuildErrorMessage(ex)
                 };
-                logger.Error(JsonConvert.SerializeObject(errorEntry));
+                logger.Error(JsonConvert.SerializeObject(errorEntry, Formatting.Indented));
                 return null;
             });
         }

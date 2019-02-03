@@ -43,8 +43,8 @@ namespace Watson.Server
                 RequestProtocolVersion = context.Request.ProtocolVersion,
                 RequestPath = context.Request.Path,
                 RequestMethod = context.Request.Method,
-                RequestBody = context.Request.Form,
-                RequestQuery = context.Request.Query,
+                RequestBody = context.Request.Form.ToDictionary(),
+                RequestQuery = context.Request.Query.ToDictionary(),
             };
             _currentMonitoring.Add(context.Request, monitorEntry);
         }
@@ -53,7 +53,7 @@ namespace Watson.Server
             if (_currentMonitoring.TryGetValue(context.Request, out MonitorEntry monitorEntry)) {
                 try {
                     monitorEntry.Stop();
-                    logger.Debug(JsonConvert.SerializeObject(monitorEntry));
+                    logger.Debug(JsonConvert.SerializeObject(monitorEntry, Formatting.Indented));
                 }
                 finally {
                     _currentMonitoring.Remove(context.Request);
@@ -71,8 +71,8 @@ namespace Watson.Server
             public string RequestProtocolVersion { get; set; }
             public string RequestPath { get; set; }
             public string RequestMethod { get; set; }
-            public dynamic RequestBody { get; set; }
-            public dynamic RequestQuery { get; set; }
+            public IDictionary<string, object> RequestBody { get; set; }
+            public IDictionary<string, object> RequestQuery { get; set; }
             public long ExecutionTimeMs { get; set; }
 
             public MonitorEntry()
