@@ -1,8 +1,6 @@
 using Nancy.Bootstrapper;
-using System;
-using EventStore.ClientAPI;
 using Newtonsoft.Json;
-using System.Text;
+using Watson.Infrastructure.Logging;
 
 namespace Watson.Server
 {
@@ -18,32 +16,11 @@ namespace Watson.Server
         public void Initialize(IPipelines pipelines)
         {
             pipelines.OnError.AddItemToStartOfPipeline((context, ex) => {
-                var errorEntry = new {
-                    Time = DateTimeOffset.UtcNow,
-                    Message = ex.Message,
-                    StackTrace = ex.StackTrace,
-                    Details = BuildErrorMessage(ex)
-                };
-                logger.Error(JsonConvert.SerializeObject(errorEntry, Formatting.Indented));
+                logger.Log(new ErrorLogEntry (ex, context) {
+                    Context = "global catch from nancy pipeline",
+                });
                 return null;
             });
-        }
-
-        private string BuildErrorMessage(Exception ex)
-        {
-            var builder = new StringBuilder();
-            while(ex != null) {
-                builder.Append(ex.Message);
-                builder.Append(Environment.NewLine);
-                builder.Append("-----------------------");
-                builder.Append(Environment.NewLine);
-                builder.Append(ex.StackTrace);
-                builder.Append(Environment.NewLine);
-                builder.Append("-----------------------");
-                builder.Append(Environment.NewLine);
-                ex = ex.InnerException;
-            }
-            return builder.ToString();
         }
     }
 }   

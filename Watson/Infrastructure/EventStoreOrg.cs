@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using CQRSlite.Events;
 using EventStore.ClientAPI;
 using Newtonsoft.Json;
+using Watson.Infrastructure.Logging;
+using ILogger = Watson.Infrastructure.Logging.ILogger;
 
 namespace Watson.Infrastructure
 {
@@ -95,13 +97,13 @@ namespace Watson.Infrastructure
 
         private IEvent TryConvertToDomainEvent(ResolvedEvent @event)
         {
-            try
-            {
+            try {
                 return ConvertToDomainEvent(@event);
             }
-            catch (UnknownEvent ex)
-            {
-                _logger.Error(ex, null);
+            catch (UnknownEvent ex) {
+                _logger.Log(new ErrorLogEntry(ex, null) {
+                    Context = "eventstore",
+                });
                 return null;
             }
         }

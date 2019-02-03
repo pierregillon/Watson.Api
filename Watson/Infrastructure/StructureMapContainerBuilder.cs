@@ -5,7 +5,7 @@ using Watson.Infrastructure;
 using StructureMap;
 using Watson.Server;
 using Watson.Domain.ReportSuspiciousFact;
-using EventStore.ClientAPI;
+using Watson.Infrastructure.Logging;
 
 namespace Watson.Infrastructure
 {
@@ -20,10 +20,12 @@ namespace Watson.Infrastructure
                 x.For(typeof(IRepository)).Use(typeof(Repository));
                 x.For<IWebSiteChecker>().Use<HttpWebRequestChecker>();
                 x.For<InMemoryDatabase>().Singleton();
-                x.For<ILogger>().Use<ConsoleLogger>();
+                x.For<ElasticSearchLogger>().Use<ElasticSearchLogger>(context => new ElasticSearchLogger());
+                x.For<ILogger>()
+                    .Use<LoggerBroadcaster>(context => new LoggerBroadcaster(context.GetInstance<ConsoleLogger>(), context.GetInstance<ElasticSearchLogger>()))
+                    .Singleton();
                 x.For<ITypeLocator>().Use<ReflectionTypeLocator>();
                 x.For<EventStoreOrg>().Use<EventStoreOrg>().Singleton();
-
                 x.For<IEventStore>().Use(c => c.GetInstance<EventStoreOrg>());
 
                 x.Scan(scanner => {
