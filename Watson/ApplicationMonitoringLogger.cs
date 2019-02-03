@@ -10,12 +10,12 @@ using System.Threading.Tasks;
 
 namespace Watson.Server
 {
-    public class Monitoring : IApplicationStartup
+    public class ApplicationMonitoringLogger : IApplicationStartup
     {
         private readonly ILogger logger;
         private readonly IDictionary<Request, MonitorEntry> _currentMonitoring = new ConcurrentDictionary<Request, MonitorEntry>();
 
-        public Monitoring(ILogger logger)
+        public ApplicationMonitoringLogger(ILogger logger)
         {
             this.logger = logger;
         }
@@ -87,4 +87,4 @@ namespace Watson.Server
             }
         }
     }
-}
+}   
