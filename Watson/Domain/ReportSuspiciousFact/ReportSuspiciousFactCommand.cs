@@ -1,11 +1,12 @@
-using System;
+using CQRSlite.Commands;
+using Watson.Domain;
 
-namespace Watson.Api
+namespace Watson.Domain.ReportSuspiciousFact
 {
-    public class FactListItem
+    public class ReportSuspiciousFactCommand : ICommand
     {
-        public string WebPageUrl { get; set; }
         public string Wording { get; set; }
+        public string WebPageUrl { get; set; }
         public string StartNodeXPath { get; set; }
         public string EndNodeXPath { get; set; }
         public int StartOffset { get; set; }

@@ -1,12 +1,13 @@
 using System;
-using Watson.Domain.SuspectFalseFact;
+using Newtonsoft.Json;
+using Watson.Domain.ReportSuspiciousFact;
 
 namespace Watson.Domain
 {
-    public struct HtmlLocation
+    public class HtmlLocation
     {
-        public string FirstNodeXPath { get; set; }
-        public string LastNodeXPath { get; set; }
+        public string StartNodeXPath { get; set; }
+        public string EndNodeXPath { get; set; }
         public int StartOffset { get; set; }
         public int EndOffset { get; set; }
     }
