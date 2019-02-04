@@ -1,33 +1,30 @@
 using System;
 using System.Threading.Tasks;
+using Elasticsearch.Net;
 
 namespace Watson.Infrastructure.Logging
 {
     public class ElasticSearchLogger : ILogger
     {
-        // private readonly ElasticClient _elasticClient;
+        private readonly ElasticLowLevelClient _client;
 
-        // public ElasticSearchLogger(string elasticSearchUrl, string login, string password)
-        // {
-        //     var uri = new Uri(elasticSearchUrl);
-        //     var pool = new SingleNodeConnectionPool(uri);
-        //     var settings = new ConnectionSettings(pool);
-
-        //     if (!string.IsNullOrEmpty(login) || !string.IsNullOrEmpty(password)) {
-        //         settings.BasicAuthentication(login, password);
-        //     }
-        //     _elasticClient = new ElasticClient(settings);
-        // }
-
-        public Task Log(MonitoringLogEntry data)
+        public ElasticSearchLogger(string server, string login = null, string password = null)
         {
-            return Task.Delay(0);
-            // return _elasticClient.IndexAsync(data, idx => idx.Index("monitoring"));
+            var uri = new Uri(server);    
+            var settings = new ConnectionConfiguration(uri);
+            if (!string.IsNullOrEmpty(login) || !string.IsNullOrEmpty(password)) {
+                settings.BasicAuthentication(login, password);
+            }
+            _client = new ElasticLowLevelClient(settings);
         }
-        public Task Log(ErrorLogEntry data)
+
+        public async Task Log(MonitoringLogEntry logEntry)
         {
-            return Task.Delay(0);
-            // return _elasticClient.IndexAsync(data, idx => idx.Index("errors"));
+            var response = await _client.IndexAsync<StringResponse>("monitoring", logEntry.GetType().Name, logEntry.Id.ToString(), PostData.Serializable(logEntry));
+        }
+        public async Task Log(ErrorLogEntry logEntry)
+        {
+            var response = await _client.IndexAsync<StringResponse>("error", logEntry.GetType().Name, logEntry.Id.ToString(), PostData.Serializable(logEntry));
         }
     }
 }   

@@ -20,7 +20,12 @@ namespace Watson.Infrastructure
                 x.For(typeof(IRepository)).Use(typeof(Repository));
                 x.For<IWebSiteChecker>().Use<HttpWebRequestChecker>();
                 x.For<InMemoryDatabase>().Singleton();
-                x.For<ElasticSearchLogger>().Use<ElasticSearchLogger>(context => new ElasticSearchLogger());
+                x.For<ElasticSearchLogger>()
+                    .Use<ElasticSearchLogger>()
+                    .Ctor<string>("server").Is("http://localhost:9200")
+                    .Ctor<string>("login").Is("")
+                    .Ctor<string>("password").Is("")
+                    .Singleton();
                 x.For<ILogger>()
                     .Use<LoggerBroadcaster>(context => new LoggerBroadcaster(context.GetInstance<ConsoleLogger>(), context.GetInstance<ElasticSearchLogger>()))
                     .Singleton();
