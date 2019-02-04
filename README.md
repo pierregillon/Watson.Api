@@ -33,8 +33,6 @@ As a member of the Watson fact checker community, I must be able to
 # Todo list
 - Move to https
 - Add token authentification
-- Trace api call with elasticsearch
-- Implement G.Y. EventStore
 - Prepare linux server to host api
 - Configure automatic deployment when new release pushed on git (appveyor)
 - Custom error return ? exception vs user friendly message ?

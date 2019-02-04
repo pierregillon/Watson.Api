@@ -3,9 +3,8 @@ using Nancy.Bootstrappers.StructureMap;
 using StructureMap;
 using Nancy.Bootstrapper;
 using CQRSlite.Events;
+using Watson.Infrastructure.Logging;
 using System;
-using System.Diagnostics;
-using EventStore.ClientAPI;
 
 namespace Watson.Server
 {
@@ -19,18 +18,18 @@ namespace Watson.Server
 
         protected override async void ApplicationStartup(IContainer container, IPipelines pipelines)
         {
-            var logger = container.GetInstance<ILogger>();
+            var logger = container.GetInstance<ConsoleLogger>();
             var eventStore = container.GetInstance<EventStoreOrg>();
             var eventPublisher = container.GetInstance<IEventPublisher>();
 
-            logger.Info($"* Connecting to eventstore ...");
+            logger.WriteLine(ConsoleColor.DarkYellow, $"* Connecting to eventstore ...");
             await eventStore.Connect("localhost");
-            logger.Info($"* Reading all events from beginning ...");
+            logger.WriteLine(ConsoleColor.DarkYellow,$"* Reading all events from beginning ...");
             var events = await eventStore.ReadAllEventsFromBeginning();
             foreach (var @event in events) {
                 await eventPublisher.Publish(@event);
             }
-            logger.Info($"* DONE");
+            logger.WriteLine(ConsoleColor.DarkYellow,$"* DONE");
         }
     }
 }
