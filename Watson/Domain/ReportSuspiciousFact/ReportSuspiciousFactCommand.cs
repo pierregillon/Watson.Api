@@ -7,9 +7,9 @@ namespace Watson.Domain.ReportSuspiciousFact
     {
         public string Wording { get; set; }
         public string WebPageUrl { get; set; }
-        public string FirstSelectedHtmlNodeXPath { get; set; }
-        public string LastSelectedHtmlNodeXPath { get; set; }
-        public int SelectedTextStartOffset { get; set; }
-        public int SelectedTextEndOffset { get; set; }
+        public string StartNodeXPath { get; set; }
+        public string EndNodeXPath { get; set; }
+        public int StartOffset { get; set; }
+        public int EndOffset { get; set; }
     }
 }

@@ -14,7 +14,7 @@ namespace Watson.Tests
     {
         private const string UNREACHABLE_WEB_PAGE = "https://wwww.unreachable/xx.html";
         private const string REACHABLE_WEB_PAGE = "https://wwww.fakenews/president.html";
-        private const string SOME_XMAP = "//*[@id=\"content\"]/div/div/div[1]/div/text()";
+        private const string SOME_XPATH = "//*[@id=\"content\"]/div/div/div[1]/div/text()";
         private const string SOME_WORDING = "This president was fairly elected.";
 
         private ICommandSender _commandSender;
@@ -44,10 +44,10 @@ namespace Watson.Tests
             var command = new ReportSuspiciousFactCommand {
                 Wording = "Our president has been elected by more that 60% of the population.",
                 WebPageUrl = "https://wwww.fakenews/president.html",
-                FirstSelectedHtmlNodeXPath = "//*[@id=\"content\"]/div/div/div[1]/div/div/div/div[3]/p[6]/text()",
-                LastSelectedHtmlNodeXPath = "//*[@id=\"content\"]/div/div/div[1]/div/div/div/div[3]/p[6]/text()",
-                SelectedTextStartOffset = 10,
-                SelectedTextEndOffset = 76
+                StartNodeXPath = "//*[@id=\"content\"]/div/div/div[1]/div/div/div/div[3]/p[6]/text()",
+                EndNodeXPath = "//*[@id=\"content\"]/div/div/div[1]/div/div/div/div[3]/p[6]/text()",
+                StartOffset = 10,
+                EndOffset = 76
             };
 
             // Act
@@ -58,10 +58,32 @@ namespace Watson.Tests
                 @event.Id != default(Guid) &&
                 @event.Wording == command.Wording &&
                 @event.WebPageUrl == command.WebPageUrl &&
-                @event.Location.StartNodeXPath.ToString() == command.FirstSelectedHtmlNodeXPath &&
-                @event.Location.EndNodeXPath.ToString() == command.LastSelectedHtmlNodeXPath &&
-                @event.Location.StartOffset == command.SelectedTextStartOffset &&
-                @event.Location.EndOffset == command.SelectedTextEndOffset
+                @event.Location.StartNodeXPath.ToString() == command.StartNodeXPath &&
+                @event.Location.EndNodeXPath.ToString() == command.EndNodeXPath &&
+                @event.Location.StartOffset == command.StartOffset &&
+                @event.Location.EndOffset == command.EndOffset
+            ));
+        }
+
+        [Fact]
+        public async Task clear_wording_from_duplicated_spaces()
+        {
+            // Arrange
+            var command = new ReportSuspiciousFactCommand {
+                Wording = "Our president has been elected                   by more that 60% of the population.",
+                WebPageUrl = REACHABLE_WEB_PAGE,
+                StartNodeXPath = SOME_XPATH,
+                EndNodeXPath = SOME_XPATH,
+                StartOffset = 10,
+                EndOffset = 76
+            };
+
+            // Act
+            await _commandSender.Send(command);
+
+            // Assert
+            await _eventPublisher.Received(1).Publish(Arg.Is<SuspiciousFactDetected>(@event =>
+                @event.Wording == "Our president has been elected by more that 60% of the population."
             ));
         }
 
@@ -92,8 +114,8 @@ namespace Watson.Tests
                 var command = new ReportSuspiciousFactCommand  {
                     WebPageUrl = REACHABLE_WEB_PAGE,
                     Wording = wordingSample,
-                    FirstSelectedHtmlNodeXPath = SOME_XMAP,
-                    LastSelectedHtmlNodeXPath = SOME_XMAP
+                    StartNodeXPath = SOME_XPATH,
+                    EndNodeXPath = SOME_XPATH
                 };
 
                 // Act
@@ -110,8 +132,8 @@ namespace Watson.Tests
                 var command = new ReportSuspiciousFactCommand  {
                     WebPageUrl = REACHABLE_WEB_PAGE,
                     Wording = wordingSample,
-                    FirstSelectedHtmlNodeXPath = SOME_XMAP,
-                    LastSelectedHtmlNodeXPath = SOME_XMAP
+                    StartNodeXPath = SOME_XPATH,
+                    EndNodeXPath = SOME_XPATH
                 };
 
                 // Act
@@ -131,8 +153,8 @@ namespace Watson.Tests
                 var command = new ReportSuspiciousFactCommand {
                     WebPageUrl = REACHABLE_WEB_PAGE,
                     Wording = SOME_WORDING,
-                    FirstSelectedHtmlNodeXPath = beginXPath,
-                    LastSelectedHtmlNodeXPath = endXPath
+                    StartNodeXPath = beginXPath,
+                    EndNodeXPath = endXPath
                 };
 
                 // Act
@@ -153,10 +175,10 @@ namespace Watson.Tests
                 var command = new ReportSuspiciousFactCommand {
                     WebPageUrl = REACHABLE_WEB_PAGE,
                     Wording = SOME_WORDING,
-                    FirstSelectedHtmlNodeXPath = $"/html/body/{beginElement}/text()",
-                    LastSelectedHtmlNodeXPath = $"/html/body/{endElement}/text()",
-                    SelectedTextStartOffset = 0,
-                    SelectedTextEndOffset = 5
+                    StartNodeXPath = $"/html/body/{beginElement}/text()",
+                    EndNodeXPath = $"/html/body/{endElement}/text()",
+                    StartOffset = 0,
+                    EndOffset = 5
                 };
 
                 // Act
@@ -170,6 +192,7 @@ namespace Watson.Tests
         [InlineData("/html/body/p/text()[1]", "/html/body/p/a/strong/text()")]
         [InlineData("/html/body/p/a/text()", "/html/body/p/strong/text()")]
         [InlineData("/html/body/p/a/text()", "/html/body/p/span/text()")]
+        [InlineData("/html/body/p/a/text()", "/html/body/p/em/text()")]
         public async Task do_not_throw_exception_when_fact_in_same_paragraph(string beginXPath, string endXPath)
         {
             try
@@ -178,10 +201,10 @@ namespace Watson.Tests
                 var command = new ReportSuspiciousFactCommand {
                     WebPageUrl = REACHABLE_WEB_PAGE,
                     Wording = SOME_WORDING,
-                    FirstSelectedHtmlNodeXPath = beginXPath,
-                    LastSelectedHtmlNodeXPath = endXPath,
-                    SelectedTextStartOffset = 0,
-                    SelectedTextEndOffset = 5
+                    StartNodeXPath = beginXPath,
+                    EndNodeXPath = endXPath,
+                    StartOffset = 0,
+                    EndOffset = 5
                 };
 
                 // Act

@@ -8,14 +8,14 @@ namespace Watson.Domain
     public class XPath
     {
         private static readonly Regex _xPathRegex = new Regex(@"^(?<id>\/\/\*\[\@id=\'.*\'\])?(?<path>\/[a-z]*(\[\d*\])?)*\/text\(\)(\[\d*\])?$".Replace("\'", "\""));
-        private static readonly string [] _textNodeTypes = new [] { "strong", "a", "span", "text()" };
+        private static readonly string [] _textNodeTypes = new [] { "strong", "em", "a", "span", "text()" };
 
         public static XPath Parse(string xPathString)
         {
-            if(string.IsNullOrEmpty(xPathString)) {
+            if (string.IsNullOrEmpty(xPathString)) {
                 throw new InvalidXPathFormat();
             }
-            if(_xPathRegex.IsMatch(xPathString) == false) {
+            if (_xPathRegex.IsMatch(xPathString) == false) {
                 throw new InvalidXPathFormat();
             }
 
@@ -28,7 +28,7 @@ namespace Watson.Domain
         private XPath(string xPathString)
         {
             _xPathString = xPathString;
-            _hierarchy = xPathString.Split("/");
+            _hierarchy = xPathString.Split("/", StringSplitOptions.RemoveEmptyEntries);
         }
 
         public bool IsInSameParagraph(XPath other)
