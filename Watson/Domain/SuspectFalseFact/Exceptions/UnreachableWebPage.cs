@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace Watson.Domain.ReportSuspiciousFact
+namespace Watson.Domain.SuspectFalseFact
 {
     public class UnreachableWebPage : Exception
     {

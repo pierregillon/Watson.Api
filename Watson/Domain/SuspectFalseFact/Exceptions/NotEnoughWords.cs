@@ -1,6 +1,6 @@
 using System;
 
-namespace Watson.Domain.ReportSuspiciousFact
+namespace Watson.Domain.SuspectFalseFact
 {
     public class NotEnoughWords : Exception
     {

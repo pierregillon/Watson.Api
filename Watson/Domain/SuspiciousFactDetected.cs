@@ -8,12 +8,12 @@ namespace Watson.Domain
         public readonly string WebPageUrl;
         public readonly HtmlLocation Location;
 
-        public SuspiciousFactDetected(Guid id, string wording, string webPageUrl, HtmlLocation location) : base(id)
+        public SuspiciousFactDetected(Guid id, string factContent, string webPageUrl, HtmlLocation htmlLocation) : base(id)
         {
             this.Id = id;
-            this.Wording = wording;
+            this.Wording = factContent;
             this.WebPageUrl = webPageUrl;
-            this.Location = location;
+            this.Location = htmlLocation;
         }
     }
 }

@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace Watson.Domain.ReportSuspiciousFact
+namespace Watson.Domain.SuspectFalseFact
 {
     public interface IWebSiteChecker
     {

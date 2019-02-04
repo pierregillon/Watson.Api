@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 
-namespace Watson.Domain
+namespace Watson.Domain.SuspectFalseFact
 {
     public static class StringExtensions
     {
@@ -12,11 +12,6 @@ namespace Watson.Domain
             return sentence
                 .Split(_wordSeparators, int.MaxValue, StringSplitOptions.RemoveEmptyEntries)
                 .Count();
-        }
-
-        public static string Clear(this string sentence)
-        {
-            return string.Join(' ', sentence.Split(" ", StringSplitOptions.RemoveEmptyEntries));
         }
     }
 }

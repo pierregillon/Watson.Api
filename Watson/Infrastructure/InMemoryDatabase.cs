@@ -11,12 +11,12 @@ namespace Watson.Infrastructure
 
         public IList<T> Table<T>()
         {
-            lock (_tables) {
-                if (_tables.ContainsKey(typeof(T)) == false) {
-                    _tables.Add(typeof(T), CreateList<T>());
-                }
-                return (IList<T>)_tables[typeof(T)];
+            if (_tables.ContainsKey(typeof(T)) == false)
+            {
+                _tables.Add(typeof(T), CreateList<T>());
             }
+
+            return (IList<T>)_tables[typeof(T)];
         }
 
         private IList CreateList<T>()

@@ -4,11 +4,11 @@ namespace Watson.Api
 {
     public class FactListItem
     {
-        public string WebPageUrl { get; set; }
-        public string Wording { get; set; }
-        public string StartNodeXPath { get; set; }
-        public string EndNodeXPath { get; set; }
-        public int StartOffset { get; set; }
-        public int EndOffset { get; set; }
+        public string webPageUrl { get; internal set; }
+        public string wording { get; internal set; }
+        public string firstTextNodeXPath { get; internal set; }
+        public string lastTextNodeXPath { get; internal set; }
+        public int startOffset { get; internal set; }
+        public int endOffset { get; internal set; }
     }
 }
