@@ -33,7 +33,7 @@ namespace Watson.Infrastructure.Logging
         private static void CheckReponseSuccess(StringResponse response, string index)
         {
             if (response.Success == false) {
-                Console.WriteLine($"[{DateTimeOffset.UtcNow}] An error occured when logging on ElasticSearch, index '{index}'. {response.OriginalException}");
+                Console.WriteLine($"[{DateTimeOffset.UtcNow}] An error occured when logging on ElasticSearch, index '{index}'. {response.OriginalException.Message}");
             }
         }
     }
