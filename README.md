@@ -36,6 +36,8 @@ As a member of the Watson fact checker community, I must be able to
 - Prepare linux server to host api
 - Configure automatic deployment when new release pushed on git (appveyor)
 - Custom error return ? exception vs user friendly message ?
+- ping api
+- 2 endpoints defined, remove
 
 # Domain event brain storming
 Domain events brain storming :
