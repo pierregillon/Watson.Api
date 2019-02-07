@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Watson.Infrastructure.Logging;
 
-namespace Watson.Server
+namespace Watson.Api.ApplicationStartups
 {
     public class ApplicationMonitoringLogger : IApplicationStartup
     {

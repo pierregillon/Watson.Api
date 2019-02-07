@@ -2,7 +2,7 @@ using Nancy.Bootstrapper;
 using Newtonsoft.Json;
 using Watson.Infrastructure.Logging;
 
-namespace Watson.Server
+namespace Watson.Api.ApplicationStartups
 {
     public class ApplicationErrorLogger : IApplicationStartup
     {
