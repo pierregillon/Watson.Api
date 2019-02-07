@@ -24,7 +24,7 @@ namespace Watson.Tests
         public ReportSuspiciousFactTests()
         {
             var builder = new StructureMapContainerBuilder();
-            var container = builder.Build();
+            var container = builder.Build(new Server.AppSettings());
 
             container.Inject(Substitute.For<IEventPublisher>());
             container.Inject(Substitute.For<IWebSiteChecker>());
