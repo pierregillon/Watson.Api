@@ -18,7 +18,7 @@ namespace Watson.Infrastructure
 
         public Task Log(ErrorLogEntry data)
         {
-            WriteLine(ERROR_COLOR, $"[{data.Time}] {data.RequestMethod} {data.RequestPath}\r\n{data.ErrorMessage}\r\n----------\r\n{data.ErrorStackTrace}");
+            WriteLine(ERROR_COLOR, $"[{data.Time}] {data.RequestMethod} {data.RequestPath} : {data.ErrorMessage}\r\n----------\r\n{data.ErrorStackTrace}");
             return Task.Delay(0);
         }
 
