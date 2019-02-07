@@ -28,20 +28,12 @@ namespace Watson.Server
             var containerBuilder = new StructureMapContainerBuilder();
             return containerBuilder.Build(settings);
         }
-
-        protected override async void ApplicationStartup(IContainer container, IPipelines pipelines)
-        {
-            var logger = container.GetInstance<ConsoleLogger>();
-            var eventStore = container.GetInstance<EventStoreOrg>();
-            var eventPublisher = container.GetInstance<IEventPublisher>();
-            var settings = container.GetInstance<AppSettings>();
-
-            
-        }
     }
 
     public class LoadEventsStartup : IApplicationStartup
     {
+        private const string PIPELINE_NAME = "LoadDomainEvents";
+
         private readonly ConsoleLogger logger;
         private readonly EventStoreOrg eventStore;
         private readonly IEventPublisher eventPublisher;
@@ -61,15 +53,18 @@ namespace Watson.Server
 
         public async void Initialize(IPipelines pipelines)
         {
-            pipelines.BeforeRequest.InsertItemAtPipelineIndex(0, new PipelineItem<Func<NancyContext, Response>>("LoadDomainEvents", InterceptRequests), false);
-
             try
             {
+                pipelines.BeforeRequest.InsertItemAtPipelineIndex(0, new PipelineItem<Func<NancyContext, Response>>(PIPELINE_NAME, InterceptRequests), false);
+                logger.WriteLine(ConsoleColor.DarkYellow, $"* Server loading events ...");
                 await ReadAndPublishAllEvents();
+                pipelines.BeforeRequest.RemoveByName(PIPELINE_NAME);
+                logger.WriteLine(ConsoleColor.DarkYellow, $"* Server ready to process requests.");
             }
-            finally
+            catch(Exception ex)
             {
-                pipelines.BeforeRequest.RemoveByName("LoadDomainEvents");
+                await logger.Log(new ErrorLogEntry(ex));
+                System.Diagnostics.Process.GetCurrentProcess().Kill();
             }
         }
 
@@ -90,14 +85,12 @@ namespace Watson.Server
             foreach (var @event in events) {
                 await eventPublisher.Publish(@event);
             }
-            
-            logger.WriteLine(ConsoleColor.DarkYellow,$"* DONE");
         }
 
         private Response InterceptRequests(NancyContext context)
         {
             return new Nancy.Response() {
-                StatusCode = HttpStatusCode.Processing,
+                StatusCode = HttpStatusCode.ServiceUnavailable,
                 ContentType = "text/plain",
                 Contents = x => {
                     var bytes = UTF8Encoding.UTF8.GetBytes("Server loading");
