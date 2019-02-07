@@ -8,9 +8,9 @@ namespace Watson.Infrastructure.Logging
     {
         private readonly ElasticLowLevelClient _client;
 
-        public ElasticSearchLogger(string server, string login = null, string password = null)
+        public ElasticSearchLogger(string server, int port = 9200, string login = null, string password = null)
         {
-            var uri = new Uri(server);    
+            var uri = new Uri($"http://{server}:{port}");    
             var settings = new ConnectionConfiguration(uri);
             if (!string.IsNullOrEmpty(login) || !string.IsNullOrEmpty(password)) {
                 settings.BasicAuthentication(login, password);
