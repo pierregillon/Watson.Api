@@ -35,8 +35,7 @@ As a member of the Watson fact checker community, I must be able to
 - Add token authentification
 - Prepare linux server to host api
 - Configure automatic deployment when new release pushed on git (appveyor)
-- Custom error return ? exception vs user friendly message ?
-- 2 endpoints defined, remove
+- Error translation ? client side vs server side ?
 
 # Domain event brain storming
 Domain events brain storming :
