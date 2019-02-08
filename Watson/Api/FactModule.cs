@@ -6,6 +6,7 @@ using CQRSlite.Queries;
 using Nancy;
 using Nancy.Configuration;
 using Nancy.ModelBinding;
+using Nancy.Responses.Negotiation;
 using Newtonsoft.Json;
 using Watson.Domain;
 using Watson.Domain.ListFacts;
@@ -32,7 +33,7 @@ namespace Watson.Api
                 }
                 catch (DomainException ex)
                 {
-                    return InvalidRequest(ex);
+                    return BadRequest(ex);
                 }
             });
 
@@ -55,23 +56,18 @@ namespace Watson.Api
                 }
                 catch (DomainException ex)
                 {
-                    return InvalidRequest(ex);
+                    return BadRequest(ex);
                 }
             });
         }
 
-        public Response InvalidRequest(DomainException ex) {
-            return new Response() {
-                StatusCode = HttpStatusCode.BadRequest,
-                ContentType = "text/json",
-                Contents = stream => {
-                    var json = JsonConvert.SerializeObject(new {
+        public Negotiator BadRequest(DomainException ex) {
+
+            return Negotiate
+                    .WithStatusCode(HttpStatusCode.BadRequest)
+                    .WithModel(new {
                         message = ex.Message
                     });
-                    var bytes = Encoding.UTF8.GetBytes(json);
-                    stream.Write(bytes, 0, bytes.Length);
-                }
-            };
         }
     }
 }

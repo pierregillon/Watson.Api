@@ -1,3 +1,5 @@
+using Nancy;
+
 namespace Watson.Api
 {
     public class PingModule : Nancy.NancyModule 
@@ -5,7 +7,9 @@ namespace Watson.Api
         public PingModule() : base()
         {
             Get("api/ping", _ => {
-                return "ping ok";
+                return Negotiate
+                    .WithStatusCode(HttpStatusCode.OK)
+                    .WithReasonPhrase("ping ok");
             });
         }
     }
