@@ -9,6 +9,7 @@ using Watson.Infrastructure.Logging;
 using Microsoft.Extensions.Configuration;
 using System;
 using CQRSlite.Queries;
+using Watson.Authentication;
 
 namespace Watson.Infrastructure
 {
@@ -41,6 +42,8 @@ namespace Watson.Infrastructure
                 x.For<ITypeLocator>().Use<ReflectionTypeLocator>();
                 x.For<EventStoreOrg>().Use<EventStoreOrg>().Singleton();
                 x.For<IEventStore>().Use(c => c.GetInstance<EventStoreOrg>());
+
+                // x.For<UserListProjection>().Singleton();
 
                 x.Scan(scanner => {
                     scanner.AssemblyContainingType(typeof(Bootstrapper));
