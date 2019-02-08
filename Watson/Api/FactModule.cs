@@ -52,7 +52,7 @@ namespace Watson.Api
                     var command = this.Bind<ReportSuspiciousFactCommand>();
                     command.WebPageUrl = url;
                     await dispatcher.Send(command);
-                    return "fact added";
+                    return Negotiate.WithStatusCode(HttpStatusCode.OK);
                 }
                 catch (DomainException ex)
                 {
