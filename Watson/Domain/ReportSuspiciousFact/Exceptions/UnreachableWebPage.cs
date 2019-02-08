@@ -1,12 +1,7 @@
-using System;
-using System.Runtime.Serialization;
-
 namespace Watson.Domain.ReportSuspiciousFact
 {
-    public class UnreachableWebPage : Exception
+    public class UnreachableWebPage : DomainException
     {
-        public UnreachableWebPage(string url) : base($"The web page '{url}' is unreachable.")
-        {
-        }
+        public UnreachableWebPage(string url) : base($"The web page '{url}' is unreachable.") { }
     }
 }

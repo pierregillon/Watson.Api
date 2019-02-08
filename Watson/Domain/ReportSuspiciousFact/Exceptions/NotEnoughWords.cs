@@ -1,8 +1,6 @@
-using System;
-
 namespace Watson.Domain.ReportSuspiciousFact
 {
-    public class NotEnoughWords : Exception
+    public class NotEnoughWords : DomainException
     {
         public NotEnoughWords(int minimumCount) : base($"A new suspicious fact wording must contain at least {minimumCount} words.")
         {
