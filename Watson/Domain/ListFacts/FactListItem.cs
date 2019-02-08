@@ -1,6 +1,6 @@
 using System;
 
-namespace Watson.Api
+namespace Watson.Domain.ListFacts
 {
     public class FactListItem
     {

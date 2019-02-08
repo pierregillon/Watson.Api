@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -5,7 +6,7 @@ using CQRSlite.Events;
 using Watson.Domain;
 using Watson.Infrastructure;
 
-namespace Watson.Api
+namespace Watson.Domain.ListFacts
 {
     public class FactFinder : IEventHandler<SuspiciousFactDetected>
     {
@@ -16,28 +17,19 @@ namespace Watson.Api
             this.database = database;
         }
 
-        public Task<IReadOnlyCollection<FactListItem>> Get(string webPageUrl, int? skip = null, int? take = null)
+        public Task<IReadOnlyCollection<FactListItem>> GetAll(string url = null, int? skip = null, int? take = null)
         {
-            var data = (IEnumerable<FactListItem>)database.Table<FactListItem>().Where(x => x.WebPageUrl == webPageUrl);
+            var query = (IEnumerable<FactListItem>)database.Table<FactListItem>();
+            if (string.IsNullOrEmpty(url) == false) {
+                query = query.Where(x => string.Equals(x.WebPageUrl, url.ToLower(), StringComparison.InvariantCultureIgnoreCase));
+            }
             if (skip.HasValue) {
-                data = data.Skip(skip.Value);
+                query = query.Skip(skip.Value);
             }
             if (take.HasValue) {
-                data = data.Take(take.Value);
+                query = query.Take(take.Value);
             }
-            return Task.FromResult((IReadOnlyCollection<FactListItem>)data.ToArray());
-        }
-
-        public Task<IReadOnlyCollection<FactListItem>> GetAll(int? skip = null, int? take = null)
-        {
-            var data = (IEnumerable<FactListItem>)database.Table<FactListItem>();
-            if (skip.HasValue) {
-                data = data.Skip(skip.Value);
-            }
-            if (take.HasValue) {
-                data = data.Take(take.Value);
-            }
-            return Task.FromResult((IReadOnlyCollection<FactListItem>)data.ToArray());
+            return Task.FromResult((IReadOnlyCollection<FactListItem>)query.ToArray());
         }
 
         public Task Handle(SuspiciousFactDetected @event)

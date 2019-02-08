@@ -8,6 +8,7 @@ using Watson.Domain.ReportSuspiciousFact;
 using Watson.Infrastructure.Logging;
 using Microsoft.Extensions.Configuration;
 using System;
+using CQRSlite.Queries;
 
 namespace Watson.Infrastructure
 {
@@ -19,6 +20,7 @@ namespace Watson.Infrastructure
             {
                 x.For<AppSettings>().Use(settings).Singleton();
                 x.For<ICommandSender>().Use<StructureMapCommandSender>().Singleton();
+                x.For<IQueryProcessor>().Use<StructureMapQueryProcessor>().Singleton();
                 x.For<IEventPublisher>().Use<StructureMapEventPublisher>().Singleton();
                 x.For(typeof(IRepository)).Use(typeof(Repository));
                 x.For<IWebSiteChecker>().Use<HttpWebRequestChecker>();
@@ -43,6 +45,11 @@ namespace Watson.Infrastructure
                 x.Scan(scanner => {
                     scanner.AssemblyContainingType(typeof(Bootstrapper));
                     scanner.ConnectImplementationsToTypesClosing(typeof(ICommandHandler<>));
+                });
+
+                x.Scan(scanner => {
+                    scanner.AssemblyContainingType(typeof(Bootstrapper));
+                    scanner.ConnectImplementationsToTypesClosing(typeof(IQueryHandler<,>));
                 });
 
                 x.Scan(scanner => {

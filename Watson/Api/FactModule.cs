@@ -2,34 +2,33 @@ using System;
 using System.Text;
 using System.Threading.Tasks;
 using CQRSlite.Commands;
+using CQRSlite.Queries;
 using Nancy;
 using Nancy.Configuration;
 using Nancy.ModelBinding;
 using Newtonsoft.Json;
 using Watson.Domain;
+using Watson.Domain.ListFacts;
 using Watson.Domain.ReportSuspiciousFact;
 
 namespace Watson.Api
 {
     public class FactModule : Nancy.NancyModule
     {
-        public FactModule(FactFinder factFinder, ICommandSender dispatcher) : base()
+        public FactModule(IQueryProcessor queryProcessor, ICommandSender dispatcher) : base()
         {
             Get("/api/fact", async _ => {
                 try
                 {
                     var base64Url = (string)this.Request.Query["url"];
-                    var take = (int?)this.Request.Query["take"];
-                    var skip = (int?)this.Request.Query["skip"];
-                    if (string.IsNullOrEmpty(base64Url)) {
-                        return await factFinder.GetAll(skip, take);
-                    }
-                    else {
-                        var url = Encoding.UTF8.GetString(Convert.FromBase64String(base64Url));;
-                        if (string.IsNullOrEmpty(url))
-                            throw new Exception("url parameter must be specified");
-                        return await factFinder.Get(url, skip, take);
-                    }
+
+                    var listFacts = new ListFactsQuery (
+                        string.IsNullOrEmpty(base64Url) == false ? Encoding.UTF8.GetString(Convert.FromBase64String(base64Url)) : null,
+                        (int?)this.Request.Query["skip"],
+                        (int?)this.Request.Query["take"]
+                    );
+
+                    return await queryProcessor.Query(listFacts);
                 }
                 catch (DomainException ex)
                 {
