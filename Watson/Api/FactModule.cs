@@ -19,22 +19,13 @@ namespace Watson.Api
         public FactModule(IQueryProcessor queryProcessor, ICommandSender dispatcher) : base()
         {
             Get("/api/fact", async _ => {
-                try
-                {
-                    var base64Url = (string)this.Request.Query["url"];
-
-                    var listFacts = new ListFactsQuery (
-                        string.IsNullOrEmpty(base64Url) == false ? Encoding.UTF8.GetString(Convert.FromBase64String(base64Url)) : null,
-                        (int?)this.Request.Query["skip"],
-                        (int?)this.Request.Query["take"]
-                    );
-
-                    return await queryProcessor.Query(listFacts);
-                }
-                catch (DomainException ex)
-                {
-                    return BadRequest(ex);
-                }
+                var base64Url = (string)this.Request.Query["url"];
+                var listFacts = new ListFactsQuery (
+                    string.IsNullOrEmpty(base64Url) == false ? Encoding.UTF8.GetString(Convert.FromBase64String(base64Url)) : null,
+                    (int?)this.Request.Query["skip"],
+                    (int?)this.Request.Query["take"]
+                );
+                return await queryProcessor.Query(listFacts);
             });
 
             Post("/api/fact", async _ => {

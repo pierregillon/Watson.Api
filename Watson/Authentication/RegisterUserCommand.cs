@@ -3,7 +3,7 @@ using CQRSlite.Commands;
 
 namespace Watson.Authentication
 {
-    public class RegisterUserCommand : ICommand
+    public class LogUserInCommand : ICommand
     {
         public Guid UserId { get; set; }
     }

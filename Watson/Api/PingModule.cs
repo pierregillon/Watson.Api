@@ -6,10 +6,10 @@ namespace Watson.Api
     {
         public PingModule() : base()
         {
-            Get("api/ping", _ => {
+            Get("/api/ping", _ => {
                 return Negotiate
                     .WithStatusCode(HttpStatusCode.OK)
-                    .WithReasonPhrase("ping ok");
+                    .WithReasonPhrase("Ping ok");
             });
         }
     }
