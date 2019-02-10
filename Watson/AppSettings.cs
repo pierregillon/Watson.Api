@@ -4,6 +4,12 @@ namespace Watson.Server
     {
         public ServerConfiguration ElasticSearch { get; set; } = new ServerConfiguration();
         public ServerConfiguration EventStore { get; set; } = new ServerConfiguration();
+        public JwtConfiguration Jwt { get; set; } = new JwtConfiguration();
+    }
+
+    public class JwtConfiguration
+    {
+        public string SecretKey { get; set; }
     }
 
     public class ServerConfiguration
