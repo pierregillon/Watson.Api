@@ -35,6 +35,7 @@ As a member of the Watson fact checker community, I must be able to
 - Prepare linux server to host api
 - Configure automatic deployment when new release pushed on git (appveyor)
 - Error translation ? client side vs server side ?
+- Validate model ? (missing fields)
 
 # Domain event brain storming
 Domain events brain storming :
