@@ -6,7 +6,7 @@ using CQRSlite.Queries;
 
 namespace Watson.Authentication
 {
-    public class RegisterUserCommandHandler : ICommandHandler<LogUserInCommand>
+    public class RegisterUserCommandHandler : ICommandHandler<RegisterUserCommand>
     {
         private readonly IRepository repository;
         private readonly IQueryProcessor queryProcessor;
@@ -17,7 +17,7 @@ namespace Watson.Authentication
             this.queryProcessor = queryProcessor;
         }
 
-        public async Task Handle(LogUserInCommand command)
+        public async Task Handle(RegisterUserCommand command)
         {
             if (await queryProcessor.Query(new FindUserQuery(command.UserId)) != null) {
                 throw new UserAlreadyExists(command.UserId);

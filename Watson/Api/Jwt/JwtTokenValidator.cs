@@ -2,6 +2,7 @@ using System;
 using Watson.Authentication;
 using System.Security.Claims;
 using CQRSlite.Queries;
+using System.Linq;
 
 namespace Watson.Api.Jwt
 {
@@ -29,7 +30,10 @@ namespace Watson.Api.Jwt
             }
 
             return new ClaimsPrincipal(new [] {
-                new ClaimsIdentity(new CustomIdentity(jwtPayload.UserId.ToString()))
+                new ClaimsIdentity(
+                    new CustomIdentity(jwtPayload.UserId.ToString()), 
+                    jwtPayload.Claims.Select(x => new Claim(x.Key, x.Value))
+                )
             });
         }
     }

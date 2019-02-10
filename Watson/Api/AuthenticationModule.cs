@@ -15,7 +15,7 @@ namespace Watson.Api
             IQueryProcessor queryProcessor)
         {
             Post("/api/register", async _ => {
-                var command = this.Bind<LogUserInCommand>();
+                var command = this.Bind<RegisterUserCommand>();
                 await commandSender.Send(command);
                 return Negotiate
                     .WithStatusCode(HttpStatusCode.OK)

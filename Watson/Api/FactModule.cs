@@ -1,4 +1,5 @@
 using System;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using CQRSlite.Commands;
@@ -28,37 +29,40 @@ namespace Watson.Api
                 return await queryProcessor.Query(listFacts);
             });
 
-            Post("/api/fact", async _ => {
-                try
-                {
-                    var base64Url = (string)this.Request.Query["url"];
-                    if (base64Url == null) {
-                        throw new Exception("url parameter must be specified");
-                    }
-                    var url = Encoding.UTF8.GetString(Convert.FromBase64String(base64Url));;
-                    if (string.IsNullOrEmpty(url)) {
-                        throw new Exception("url parameter must be specified");
-                    }
-                    
+            base.Post("/api/fact", async _ => {
+                try {
                     var command = this.Bind<ReportSuspiciousFactCommand>();
-                    command.WebPageUrl = url;
+                    command.WebPageUrl = GetFactUrl();
                     await dispatcher.Send(command);
                     return Negotiate.WithStatusCode(HttpStatusCode.OK);
                 }
-                catch (DomainException ex)
-                {
+                catch (DomainException ex) {
                     return BadRequest(ex);
                 }
             });
         }
 
-        public Negotiator BadRequest(DomainException ex) {
+        private Negotiator BadRequest(DomainException ex) {
 
             return Negotiate
                     .WithStatusCode(HttpStatusCode.BadRequest)
                     .WithModel(new {
                         message = ex.Message
                     });
+        }
+
+        private string GetFactUrl()
+        {
+            var base64Url = (string)this.Request.Query["url"];
+            if (string.IsNullOrEmpty(base64Url)) {
+                throw new Exception("fact url parameter must be specified");
+            }
+            var url = Encoding.UTF8.GetString(Convert.FromBase64String(base64Url)); ;
+            if (string.IsNullOrEmpty(url)) {
+                throw new Exception("fact url parameter must be specified");
+            }
+
+            return url;
         }
     }
 }
