@@ -20,9 +20,6 @@ namespace Watson.Infrastructure
                 if(response is HttpWebResponse) {
                     return ((HttpWebResponse)response).StatusCode == HttpStatusCode.OK;
                 }
-                else if(response is FileWebResponse) {
-                    return true;
-                }
                 throw new Exception("Unknown web response");
             }
             catch (WebException)
