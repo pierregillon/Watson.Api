@@ -9,8 +9,8 @@ namespace Watson.Domain
         private const int MAXIMUM_WORD_COUNT = 50;
         private const int MINIMUM_WORD_COUNT = 3;
 
-        public Fact(){}
-        public Fact(string wording, string webPageUrl, XPath startNodeXPath, int startOffset, XPath endNodeXPath, int endOffset)
+        public Fact() { }
+        public Fact(Guid reporter, string wording, string webPageUrl, XPath startNodeXPath, int startOffset, XPath endNodeXPath, int endOffset)
         {
             CheckWordCount(wording);
 
@@ -18,13 +18,18 @@ namespace Watson.Domain
                 throw new FactSpreadOverMultipleParagraphs();
             }
 
-            ApplyChange(new SuspiciousFactDetected(Guid.NewGuid(), wording.Clear(), webPageUrl, new HtmlLocation()
-            {
-                StartNodeXPath = startNodeXPath.ToString(),
-                StartOffset = startOffset,
-                EndNodeXPath = endNodeXPath.ToString(),
-                EndOffset = endOffset
-            }));
+            ApplyChange(new SuspiciousFactDetected(
+                Guid.NewGuid(),
+                reporter,
+                wording.Clear(), 
+                webPageUrl, 
+                new HtmlLocation() {
+                    StartNodeXPath = startNodeXPath.ToString(),
+                    StartOffset = startOffset,
+                    EndNodeXPath = endNodeXPath.ToString(),
+                    EndOffset = endOffset
+                }
+            ));
         }
 
         private static void CheckWordCount(string wording)

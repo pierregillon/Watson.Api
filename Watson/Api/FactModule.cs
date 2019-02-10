@@ -20,19 +20,25 @@ namespace Watson.Api
         public FactModule(IQueryProcessor queryProcessor, ICommandSender dispatcher) : base()
         {
             Get("/api/fact", async _ => {
-                var base64Url = (string)this.Request.Query["url"];
+                var base64Url = (string)this.Request.Query.url;
                 var listFacts = new ListFactsQuery (
                     string.IsNullOrEmpty(base64Url) == false ? Encoding.UTF8.GetString(Convert.FromBase64String(base64Url)) : null,
-                    (int?)this.Request.Query["skip"],
-                    (int?)this.Request.Query["take"]
+                    (int?)this.Request.Query.skip,
+                    (int?)this.Request.Query.take
                 );
                 return await queryProcessor.Query(listFacts);
             });
 
-            base.Post("/api/fact", async _ => {
+            Post("/api/fact", async _ => {
                 try {
-                    var command = this.Bind<ReportSuspiciousFactCommand>();
-                    command.WebPageUrl = GetFactUrl();
+                    var command = new ReportSuspiciousFactCommand() {
+                        StartNodeXPath = Request.Form.startNodeXPath,
+                        StartOffset = Request.Form.startOffset,
+                        EndNodeXPath = Request.Form.endNodeXPath,
+                        EndOffset = Request.Form.endOffset,
+                        Reporter = Guid.Parse(Context.CurrentUser.FindFirstValue("userId")),
+                        WebPageUrl = GetFactUrl()
+                    };
                     await dispatcher.Send(command);
                     return Negotiate.WithStatusCode(HttpStatusCode.OK);
                 }
@@ -43,7 +49,6 @@ namespace Watson.Api
         }
 
         private Negotiator BadRequest(DomainException ex) {
-
             return Negotiate
                     .WithStatusCode(HttpStatusCode.BadRequest)
                     .WithModel(new {
@@ -51,8 +56,7 @@ namespace Watson.Api
                     });
         }
 
-        private string GetFactUrl()
-        {
+        private string GetFactUrl() {
             var base64Url = (string)this.Request.Query["url"];
             if (string.IsNullOrEmpty(base64Url)) {
                 throw new Exception("fact url parameter must be specified");
@@ -61,7 +65,6 @@ namespace Watson.Api
             if (string.IsNullOrEmpty(url)) {
                 throw new Exception("fact url parameter must be specified");
             }
-
             return url;
         }
     }

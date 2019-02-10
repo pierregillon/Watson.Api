@@ -22,6 +22,7 @@ namespace Watson.Domain.ReportSuspiciousFact
             }
 
             var fact = new Fact (
+                command.Reporter,
                 command.Wording, 
                 command.WebPageUrl,
                 XPath.Parse(command.StartNodeXPath),

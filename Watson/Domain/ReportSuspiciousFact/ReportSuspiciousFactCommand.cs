@@ -1,3 +1,4 @@
+using System;
 using CQRSlite.Commands;
 using Watson.Domain;
 
@@ -5,6 +6,7 @@ namespace Watson.Domain.ReportSuspiciousFact
 {
     public class ReportSuspiciousFactCommand : ICommand
     {
+        public Guid Reporter { get; set; }
         public string Wording { get; set; }
         public string WebPageUrl { get; set; }
         public string StartNodeXPath { get; set; }

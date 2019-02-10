@@ -20,9 +20,7 @@ namespace Watson.Api
                 return Negotiate
                     .WithStatusCode(HttpStatusCode.OK)
                     .WithModel(new {
-                        token = tokenEncoder.Encode(new JwtPayload {
-                            UserId = command.UserId
-                        })
+                        token = tokenEncoder.Encode(new JwtPayload(command.UserId))
                     });
             });
 
@@ -38,9 +36,7 @@ namespace Watson.Api
                 return Negotiate
                     .WithStatusCode(HttpStatusCode.OK)
                     .WithModel(new {
-                        token = tokenEncoder.Encode(new JwtPayload {
-                            UserId = user.Id
-                        })
+                        token = tokenEncoder.Encode(new JwtPayload(userId))
                     });
             });
         }
