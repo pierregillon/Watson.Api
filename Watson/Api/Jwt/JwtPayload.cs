@@ -6,12 +6,12 @@ namespace Watson.Api.Jwt
     public class JwtPayload
     {
         public Guid UserId { get; set; }
-        public DateTime Expire { get; } = DateTime.UtcNow.AddMinutes(30);
+        public DateTime Expire { get; set; }
         public IDictionary<string, string> Claims { get; set; } = new Dictionary<string, string>();
 
-        public JwtPayload(Guid userId)
-        {
+        public JwtPayload(Guid userId) {
             UserId = userId;
+            Expire = DateTime.UtcNow.AddDays(1);
             Claims.Add("userId", userId.ToString());
         }
     }

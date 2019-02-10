@@ -37,7 +37,8 @@ namespace Watson.Api
                         EndNodeXPath = Request.Form.endNodeXPath,
                         EndOffset = Request.Form.endOffset,
                         Reporter = Guid.Parse(Context.CurrentUser.FindFirstValue("userId")),
-                        WebPageUrl = GetFactUrl()
+                        WebPageUrl = GetFactUrl(),
+                        Wording = Request.Form.wording
                     };
                     await dispatcher.Send(command);
                     return Negotiate.WithStatusCode(HttpStatusCode.OK);
