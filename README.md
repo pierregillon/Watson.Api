@@ -36,6 +36,7 @@ As a member of the Watson fact checker community, I must be able to
 - Configure automatic deployment when new release pushed on git (appveyor)
 - Error translation ? client side vs server side ?
 - Validate model ? (missing fields)
+- Assert that published events are processed in the same order (multithreading issue)
 
 # Domain event brain storming
 Domain events brain storming :
