@@ -18,10 +18,12 @@ namespace Watson.Api
             Post("/api/register", async _ => {
                 var command = this.Bind<RegisterUserCommand>();
                 await commandSender.Send(command);
+                var token = new JwtPayload(command.UserId);
                 return Negotiate
                     .WithStatusCode(HttpStatusCode.OK)
                     .WithModel(new {
-                        token = tokenEncoder.Encode(new JwtPayload(command.UserId))
+                        token = tokenEncoder.Encode(token),
+                        expire = token.Expire
                     });
             });
 
@@ -34,10 +36,12 @@ namespace Watson.Api
                 if (user == null) {
                     return Negotiate.WithStatusCode(HttpStatusCode.Unauthorized);
                 }
+                var token = new JwtPayload(userId);
                 return Negotiate
                     .WithStatusCode(HttpStatusCode.OK)
                     .WithModel(new {
-                        token = tokenEncoder.Encode(new JwtPayload(userId))
+                        token = tokenEncoder.Encode(token),
+                        expire = token.Expire
                     });
             });
         }
