@@ -2,7 +2,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CQRSlite.Queries;
 
-namespace Watson.Authentication
+namespace Watson.Domain.FindUser
 {
     public class FindUserQueryHandler : IQueryHandler<FindUserQuery, UserListItem>
     {

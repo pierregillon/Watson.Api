@@ -3,7 +3,8 @@ using CQRSlite.Queries;
 using Nancy;
 using Nancy.ModelBinding;
 using Watson.Api.Jwt;
-using Watson.Authentication;
+using Watson.Domain.FindUser;
+using Watson.Domain.RegisterUser;
 
 namespace Watson.Api
 {

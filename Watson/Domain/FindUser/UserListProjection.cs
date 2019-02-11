@@ -1,9 +1,10 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using CQRSlite.Events;
+using Watson.Domain;
 using Watson.Infrastructure;
 
-namespace Watson.Authentication
+namespace Watson.Domain.FindUser
 {
     public class UserListProjection : IEventHandler<UserRegistered>
     {

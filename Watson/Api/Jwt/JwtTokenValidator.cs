@@ -1,8 +1,8 @@
 using System;
-using Watson.Authentication;
 using System.Security.Claims;
 using CQRSlite.Queries;
 using System.Linq;
+using Watson.Domain.FindUser;
 
 namespace Watson.Api.Jwt
 {

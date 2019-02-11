@@ -1,7 +1,7 @@
 using System;
 using Watson.Domain;
 
-namespace Watson.Authentication
+namespace Watson.Domain
 {
     public class UserRegistered : DomainEvent
     {

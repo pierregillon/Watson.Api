@@ -1,7 +1,7 @@
 using System;
 using CQRSlite.Queries;
 
-namespace Watson.Authentication
+namespace Watson.Domain.FindUser
 {
     public class FindUserQuery : IQuery<UserListItem>
     {

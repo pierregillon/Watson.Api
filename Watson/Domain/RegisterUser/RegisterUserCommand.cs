@@ -1,7 +1,7 @@
 using System;
 using CQRSlite.Commands;
 
-namespace Watson.Authentication
+namespace Watson.Domain.RegisterUser
 {
     public class RegisterUserCommand : ICommand
     {

@@ -1,6 +1,6 @@
 using System;
 
-namespace Watson.Authentication
+namespace Watson.Domain.FindUser
 {
     public class UserListItem
     {

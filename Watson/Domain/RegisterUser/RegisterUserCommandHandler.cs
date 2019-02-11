@@ -3,8 +3,9 @@ using CQRSlite.Commands;
 using CQRSlite.Domain;
 using CQRSlite.Events;
 using CQRSlite.Queries;
+using Watson.Domain.FindUser;
 
-namespace Watson.Authentication
+namespace Watson.Domain.RegisterUser
 {
     public class RegisterUserCommandHandler : ICommandHandler<RegisterUserCommand>
     {

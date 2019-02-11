@@ -1,7 +1,7 @@
 using System;
 using CQRSlite.Domain;
 
-namespace Watson.Authentication
+namespace Watson.Domain
 {
     public class User : AggregateRoot
     {

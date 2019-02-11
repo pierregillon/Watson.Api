@@ -9,7 +9,6 @@ using Watson.Infrastructure.Logging;
 using Microsoft.Extensions.Configuration;
 using System;
 using CQRSlite.Queries;
-using Watson.Authentication;
 using Watson.Api;
 using Watson.Api.Jwt;
 
