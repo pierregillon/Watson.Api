@@ -1,4 +1,5 @@
 using System;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using CQRSlite.Commands;
@@ -6,6 +7,7 @@ using CQRSlite.Queries;
 using Nancy;
 using Nancy.Configuration;
 using Nancy.ModelBinding;
+using Nancy.Responses.Negotiation;
 using Newtonsoft.Json;
 using Watson.Domain;
 using Watson.Domain.ListFacts;
@@ -18,60 +20,53 @@ namespace Watson.Api
         public FactModule(IQueryProcessor queryProcessor, ICommandSender dispatcher) : base()
         {
             Get("/api/fact", async _ => {
-                try
-                {
-                    var base64Url = (string)this.Request.Query["url"];
-
-                    var listFacts = new ListFactsQuery (
-                        string.IsNullOrEmpty(base64Url) == false ? Encoding.UTF8.GetString(Convert.FromBase64String(base64Url)) : null,
-                        (int?)this.Request.Query["skip"],
-                        (int?)this.Request.Query["take"]
-                    );
-
-                    return await queryProcessor.Query(listFacts);
-                }
-                catch (DomainException ex)
-                {
-                    return InvalidRequest(ex);
-                }
+                var base64Url = (string)this.Request.Query.url;
+                var listFacts = new ListFactsQuery (
+                    string.IsNullOrEmpty(base64Url) == false ? Encoding.UTF8.GetString(Convert.FromBase64String(base64Url)) : null,
+                    (int?)this.Request.Query.skip,
+                    (int?)this.Request.Query.take
+                );
+                return await queryProcessor.Query(listFacts);
             });
 
             Post("/api/fact", async _ => {
-                try
-                {
-                    var base64Url = (string)this.Request.Query["url"];
-                    if (base64Url == null) {
-                        throw new Exception("url parameter must be specified");
-                    }
-                    var url = Encoding.UTF8.GetString(Convert.FromBase64String(base64Url));;
-                    if (string.IsNullOrEmpty(url)) {
-                        throw new Exception("url parameter must be specified");
-                    }
-                    
-                    var command = this.Bind<ReportSuspiciousFactCommand>();
-                    command.WebPageUrl = url;
+                try {
+                    var command = new ReportSuspiciousFactCommand() {
+                        StartNodeXPath = Request.Form.startNodeXPath,
+                        StartOffset = Request.Form.startOffset,
+                        EndNodeXPath = Request.Form.endNodeXPath,
+                        EndOffset = Request.Form.endOffset,
+                        Reporter = Guid.Parse(Context.CurrentUser.FindFirstValue("userId")),
+                        WebPageUrl = GetFactUrl(),
+                        Wording = Request.Form.wording
+                    };
                     await dispatcher.Send(command);
-                    return "fact added";
+                    return Negotiate.WithStatusCode(HttpStatusCode.OK);
                 }
-                catch (DomainException ex)
-                {
-                    return InvalidRequest(ex);
+                catch (DomainException ex) {
+                    return BadRequest(ex);
                 }
             });
         }
 
-        public Response InvalidRequest(DomainException ex) {
-            return new Response() {
-                StatusCode = HttpStatusCode.BadRequest,
-                ContentType = "text/json",
-                Contents = stream => {
-                    var json = JsonConvert.SerializeObject(new {
+        private Negotiator BadRequest(DomainException ex) {
+            return Negotiate
+                    .WithStatusCode(HttpStatusCode.BadRequest)
+                    .WithModel(new {
                         message = ex.Message
                     });
-                    var bytes = Encoding.UTF8.GetBytes(json);
-                    stream.Write(bytes, 0, bytes.Length);
-                }
-            };
+        }
+
+        private string GetFactUrl() {
+            var base64Url = (string)this.Request.Query["url"];
+            if (string.IsNullOrEmpty(base64Url)) {
+                throw new Exception("fact url parameter must be specified");
+            }
+            var url = Encoding.UTF8.GetString(Convert.FromBase64String(base64Url)); ;
+            if (string.IsNullOrEmpty(url)) {
+                throw new Exception("fact url parameter must be specified");
+            }
+            return url;
         }
     }
 }

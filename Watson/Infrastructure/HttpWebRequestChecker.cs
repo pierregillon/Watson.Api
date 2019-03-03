@@ -15,9 +15,12 @@ namespace Watson.Infrastructure
 
             try
             {
-                var request = (HttpWebRequest)WebRequest.Create(uri);
-                var response = (HttpWebResponse)await request.GetResponseAsync();
-                return response.StatusCode == HttpStatusCode.OK;
+                var request = WebRequest.Create(uri);
+                var response = await request.GetResponseAsync();
+                if(response is HttpWebResponse) {
+                    return ((HttpWebResponse)response).StatusCode == HttpStatusCode.OK;
+                }
+                throw new Exception("Unknown web response");
             }
             catch (WebException)
             {

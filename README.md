@@ -14,16 +14,15 @@ The api is built using Command Query Response Segregation (CQRS), Domain Driven 
 * [CQRSLite](https://github.com/gautema/CQRSlite)
 
 # Features v1.0
-[DONE]        - Report a suspicious fact
-[DONE]        - List facts of a web page
-[IN PROGRESS] - Authenticate user with a nickname
-
-# Features v1.1
-[IN PROGRESS] - Mark a fact as interesting and further investigation needed
-[IN PROGRESS] - Mark a fact as "not a fact" and must be removed
+- [DONE] Report a suspicious fact
+- [DONE] List facts of a web page
+- [DONE] Jwt token authentication
+- [IN PROGRESS] TS : Infrastructure requirements
 
 # Next features
 As a member of the Watson fact checker community, I must be able to
+- Mark a fact as interesting and further investigation needed
+- Mark a fact as "not a fact" and must be removed
 - Link 2 facts
 - Qualify a fact relation (confirm => infirm)
 - List all related fact of a fact
@@ -32,10 +31,11 @@ As a member of the Watson fact checker community, I must be able to
 
 # Todo list
 - Move to https
-- Add token authentification
 - Prepare linux server to host api
 - Configure automatic deployment when new release pushed on git (appveyor)
 - Error translation ? client side vs server side ?
+- Nancy Validate model ? (missing fields)
+- Assert that published events are processed in the same order (multithreading issue)
 
 # Domain event brain storming
 Domain events brain storming :

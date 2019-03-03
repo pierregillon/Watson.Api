@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Elasticsearch.Net;
 
@@ -18,16 +19,24 @@ namespace Watson.Infrastructure.Logging
             _client = new ElasticLowLevelClient(settings);
         }
 
-        public async Task Log(MonitoringLogEntry logEntry)
+        public Task Log(MonitoringLogEntry logEntry)
         {
-            var response = await _client.IndexAsync<StringResponse>("monitoring", logEntry.GetType().Name, logEntry.Id.ToString(), PostData.Serializable(logEntry));
-            CheckReponseSuccess(response, "monitoring");
+            ThreadPool.QueueUserWorkItem(async x => {
+                var response = await _client.IndexAsync<StringResponse>("monitoring", logEntry.GetType().Name, logEntry.Id.ToString(), PostData.Serializable(logEntry));
+                CheckReponseSuccess(response, "monitoring");
+            });
+
+            return Task.Delay(0);
         }
 
-        public async Task Log(ErrorLogEntry logEntry)
+        public Task Log(ErrorLogEntry logEntry)
         {
-            var response = await _client.IndexAsync<StringResponse>("error", logEntry.GetType().Name, logEntry.Id.ToString(), PostData.Serializable(logEntry));
-            CheckReponseSuccess(response, "error");
+            ThreadPool.QueueUserWorkItem(async x => {
+                var response = await _client.IndexAsync<StringResponse>("error", logEntry.GetType().Name, logEntry.Id.ToString(), PostData.Serializable(logEntry));
+                CheckReponseSuccess(response, "error");
+            });
+            
+            return Task.Delay(0);
         }
         
         private static void CheckReponseSuccess(StringResponse response, string index)
