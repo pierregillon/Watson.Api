@@ -11,7 +11,7 @@ namespace Watson.Api.Jwt
 
         public JwtPayload(Guid userId) {
             UserId = userId;
-            Expire = DateTime.UtcNow.AddSeconds(10);
+            Expire = DateTime.UtcNow.AddDays(1);
             Claims.Add("userId", userId.ToString());
         }
     }
