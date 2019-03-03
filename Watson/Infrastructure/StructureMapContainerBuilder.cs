@@ -28,6 +28,7 @@ namespace Watson.Infrastructure
                 // Application
                 x.For<ICommandSender>().Use<StructureMapCommandSender>().Singleton();
                 x.For<IQueryProcessor>().Use<StructureMapQueryProcessor>().Singleton();
+                x.For<StructureMapEventPublisher>().Use<StructureMapEventPublisher>().Singleton();
                 x.For<IEventPublisher>().Use<StructureMapEventPublisher>().Singleton();
                 x.For<IRepository>().Use<Repository>();
 

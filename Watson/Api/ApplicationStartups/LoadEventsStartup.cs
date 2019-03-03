@@ -17,13 +17,13 @@ namespace Watson.Api.ApplicationStartups
 
         private readonly ConsoleLogger logger;
         private readonly EventStoreOrg eventStore;
-        private readonly IEventPublisher eventPublisher;
+        private readonly StructureMapEventPublisher eventPublisher;
         private readonly AppSettings settings;
 
         public LoadEventsStartup(
             ConsoleLogger logger, 
             EventStoreOrg eventStore, 
-            IEventPublisher eventPublisher,
+            StructureMapEventPublisher eventPublisher,
             AppSettings settings)
         {
             this.logger = logger;
@@ -63,9 +63,7 @@ namespace Watson.Api.ApplicationStartups
             var events = await eventStore.ReadAllEventsFromBeginning();
             
             logger.WriteLine(ConsoleColor.DarkYellow, $"* Publishing {events.Count()} events ...");
-            foreach (var @event in events) {
-                await eventPublisher.Publish(@event);
-            }
+            await eventPublisher.Publish(@events);
         }
 
         private Response InterceptRequests(NancyContext context)
