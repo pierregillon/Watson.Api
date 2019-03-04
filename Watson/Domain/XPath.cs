@@ -7,7 +7,7 @@ namespace Watson.Domain
 {
     public class XPath
     {
-        private static readonly Regex _xPathRegex = new Regex(@"^(?<id>\/\/\*\[\@id=\'.*\'\])?(?<path>\/[a-z]*(\[\d*\])?)*\/text\(\)(\[\d*\])?$".Replace("\'", "\""));
+        private static readonly Regex _xPathRegex = new Regex(@"^(?<id>\/\/\*\[\@id=\'.*\'\])?(?<path>\/[a-z]*\d*(\[\d*\])?)*\/text\(\)(\[\d*\])?$".Replace("\'", "\""));
         private static readonly string [] _textNodeTypes = new [] { "strong", "em", "a", "span", "text()" };
 
         public static XPath Parse(string xPathString)

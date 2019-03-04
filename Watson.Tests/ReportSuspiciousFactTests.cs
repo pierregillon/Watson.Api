@@ -163,6 +163,25 @@ namespace Watson.Tests
         }
 
         [Theory]
+        [InlineData("/html/body/p[1]/text()")]
+        [InlineData("//*[@id=\"myID\"]/ul/li[1]/div/div[1]/div/div/h13/a/text()")]
+        public async Task accept_different_xpath_format(string xmap) {
+
+            // Arrange
+            var command = new ReportSuspiciousFactCommand {
+                Wording = "Our president has been elected by more that 60% of the population.",
+                WebPageUrl = "https://wwww.fakenews/president.html",
+                StartNodeXPath = xmap,
+                EndNodeXPath = xmap,
+                StartOffset = 10,
+                EndOffset = 76
+            };
+
+            // Act
+            await _commandSender.Send(command);
+        }
+
+        [Theory]
         [InlineData("p", "div")]
         [InlineData("p[1]", "p[2]")]
         [InlineData("p[1]", "p[3]")]
