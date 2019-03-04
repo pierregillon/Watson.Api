@@ -146,7 +146,7 @@ namespace Watson.Tests
         [InlineData("", "")]
         [InlineData("qsf", "abjlqsdfj")]
         [InlineData("/html", "/html")]
-        public async Task throw_exception_when_invalid_html_xmap_location(string beginXPath, string endXPath)
+        public async Task throw_exception_when_invalid_html_xpath_location(string beginXPath, string endXPath)
         {
             await Assert.ThrowsAsync<InvalidXPathFormat>(async () => {
                 // Arrange
@@ -165,14 +165,14 @@ namespace Watson.Tests
         [Theory]
         [InlineData("/html/body/p[1]/text()")]
         [InlineData("//*[@id=\"myID\"]/ul/li[1]/div/div[1]/div/div/h13/a/text()")]
-        public async Task accept_different_xpath_format(string xmap) {
+        public async Task accept_different_xpath_format(string xpath) {
 
             // Arrange
             var command = new ReportSuspiciousFactCommand {
                 Wording = "Our president has been elected by more that 60% of the population.",
                 WebPageUrl = "https://wwww.fakenews/president.html",
-                StartNodeXPath = xmap,
-                EndNodeXPath = xmap,
+                StartNodeXPath = xpath,
+                EndNodeXPath = xpath,
                 StartOffset = 10,
                 EndOffset = 76
             };
