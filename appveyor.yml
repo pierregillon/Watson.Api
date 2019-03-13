@@ -1,0 +1,27 @@
+version: '{branch}.{build}'
+image: Visual Studio 2017
+configuration: Release
+before_build:
+  ps: dotnet restore
+build:
+  project: Watson.sln
+after_build:
+  ps: >-
+    dotnet publish Watson/Watson.csproj
+
+    $publishPath = "Watson/bin/Release/netcoreapp2.2/publish"
+
+    del "$($publishPath)/appsettings.Development.json"
+    
+    Compress-Archive -Path "$($publishPath)/*" -DestinationPath "$($publishPath)/archive.zip"
+artifacts:
+  path: '**/publish/*.zip'
+  name: packageApi
+deploy:
+  provider: GitHub
+  auth_token:
+    secure: KFtQRWu6GvBEv9H5UreTcjYAcanFOY1bA2Q/76gmouBZvKbBFe8YqoJbxY0vGU4k
+  artifact: packageApi
+  on:
+    branch: master
+    APPVEYOR_REPO_TAG: true
