@@ -10,14 +10,15 @@ For now, the client applications are browser extensions :
 * For IE (Coming soon)
 
 # Features
+No production version yet. Wait for v1.0.
 
-# v0.1
+## v0.1
 - [x] Report a suspicious fact
 - [x] List facts of a web page
 - [x] Jwt token authentication
 - [ ] Infrastructure requirements
 
-# Next features
+## Next features
 As a member of the Watson fact checker community, I must be able to
 - [ ] Mark a fact as interesting and further investigation needed
 - [ ] Mark a fact as "not a fact" and must be removed
@@ -31,6 +32,7 @@ As a member of the Watson fact checker community, I must be able to
 - [ ] RabbitMQ for event publishing
 
 # Development
+Let's talk here about technical details. You might be interested of this section if you want to run the code on your machine.
 
 ## How the API is built ?
 The api is built using .NET CORE and following : 
@@ -81,16 +83,6 @@ The project use [SemVer](http://semver.org/) for versioning. For the versions av
 
 # License
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
-# Todo list
-- Move to https
-- Prepare linux server to host api
-- Configure automatic deployment when new release pushed on git (appveyor)
-- Error translation ? client side vs server side ?
-- Nancy Validate model ? (missing fields)
-- Assert that published events are processed in the same order (multithreading issue)
-- Implement a custom IEventPublisher and publish events in EventStore implementation not in Repo (careful ioc).
-- check port listening in command line execution. (5000 + 5001)
 
 # Domain event brain storming
 Domain events brain storming :
