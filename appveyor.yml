@@ -23,5 +23,4 @@ deploy:
     secure: KFtQRWu6GvBEv9H5UreTcjYAcanFOY1bA2Q/76gmouBZvKbBFe8YqoJbxY0vGU4k
   artifact: packageApi
   on:
-    branch: master
     APPVEYOR_REPO_TAG: true
