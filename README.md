@@ -1,4 +1,4 @@
-[![Build status](https://ci.appveyor.com/api/projects/status/uw4n1wgl996vdm4h?svg=true)](https://ci.appveyor.com/project/pierregillon/watson-api)
+[![Build status](https://ci.appveyor.com/api/projects/status/m63e9e23175jiju4?svg=true)](https://ci.appveyor.com/project/pierregillon/watson-api)
 
 # What is Watson ?
 Watson is a collaborative web fact checker. We all are tired to see false assumptions, fake news and data manipulation when browsing the Internet. The idea behind Watson is to create a community of anonymous inspectors, simple citizens like you and me, who chases and reports suspicious facts. Cooperation through collective intelligence let us distinct true facts and bad information.
