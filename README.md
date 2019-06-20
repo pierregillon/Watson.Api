@@ -12,13 +12,12 @@ For now, the client applications are browser extensions :
 # Features
 No production version yet. Wait for v1.0.
 
-## v0.1
+## Implemented (v0.1)
 - [x] Report a suspicious fact
 - [x] List facts of a web page
 - [x] Jwt token authentication
-- [ ] Infrastructure requirements
 
-## Next features
+## In progress
 As a member of the Watson fact checker community, I must be able to
 - [ ] Mark a fact as interesting and further investigation needed
 - [ ] Mark a fact as "not a fact" and must be removed
@@ -28,17 +27,18 @@ As a member of the Watson fact checker community, I must be able to
 - [ ] Qualify document (scientific, politic, non professional blog) to estimate quality and pertinence
 - [ ] Hide unimportant words in a fact, replaced by [...]
 
-## Technical
+Technical
+- [ ] Infrastructure requirements to automatically deploy from CI
 - [ ] RabbitMQ for event publishing
 
 # Development
 Let's talk here about technical details. You might be interested of this section if you want to run the code on your machine.
 
 ## How the API is built ?
-The api is built using .NET CORE and following : 
-- Command Query Response Segregation (CQRS)
-- Domain Driven Design (DDD)
-- Event Sourcing
+The api is built using .NET Core and following architecture patterns : 
+- [Command Query Response Segregation (CQRS)](https://www.martinfowler.com/bliki/CQRS.html)
+- [Domain Driven Design (DDD)](https://domainlanguage.com/ddd/)
+- [Event Sourcing](https://martinfowler.com/eaaDev/EventSourcing.html)
 
 ## Main libraries
 * [CQRSLite](https://github.com/gautema/CQRSlite) : light library for DDD and CQRS programming
@@ -48,7 +48,7 @@ The api is built using .NET CORE and following :
 * [EventStore.ClientAPI.NetCore](https://github.com/EventStore/EventStore/tree/master/src/EventStore.ClientAPI) : client to EventStore DB (the stream-oriented database optimised for event sourcing)
 
 ## Installing & Executing
-0. Make sure .NET CORE tooling is installed on your environment (dotnet command line tool)
+0. Make sure .NET Core SDK is installed on your environment (dotnet command line tool)
 
 1. Install dependencies
 ```
