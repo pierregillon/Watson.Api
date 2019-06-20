@@ -1,27 +1,30 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using CQRSlite.Events;
-using Watson.Domain;
 using Watson.Infrastructure;
 
 namespace Watson.Domain.ListFacts
 {
     public class FactFinder : IEventHandler<SuspiciousFactDetected>
     {
-        private readonly InMemoryDatabase database;
+        private static readonly Regex Regex = new Regex(@"^http[s]?:\/\/[^?^&]*");
+
+        private readonly InMemoryDatabase _database;
 
         public FactFinder(InMemoryDatabase database)
         {
-            this.database = database;
+            this._database = database;
         }
 
         public Task<IReadOnlyCollection<FactListItem>> GetAll(string url = null, int? skip = null, int? take = null)
         {
-            var query = (IEnumerable<FactListItem>)database.Table<FactListItem>();
+            var query = (IEnumerable<FactListItem>)_database.Table<FactListItem>();
             if (string.IsNullOrEmpty(url) == false) {
-                query = query.Where(x => string.Equals(x.WebPageUrl, url.ToLower(), StringComparison.InvariantCultureIgnoreCase));
+                var pageBaseUrl = PageUrlWithoutParameters(url);
+                query = query.Where(x => string.Equals(x.PageBaseUrl, pageBaseUrl, StringComparison.InvariantCultureIgnoreCase));
             }
             if (skip.HasValue) {
                 query = query.Skip(skip.Value);
@@ -34,17 +37,27 @@ namespace Watson.Domain.ListFacts
 
         public Task Handle(SuspiciousFactDetected @event)
         {
-            database.Table<FactListItem>()
+            _database.Table<FactListItem>()
                     .Add(new FactListItem {
                         WebPageUrl = @event.WebPageUrl,
-                        StartNodeXPath = @event.Location.StartNodeXPath.ToString(),
-                        EndNodeXPath = @event.Location.EndNodeXPath.ToString(),
+                        PageBaseUrl = PageUrlWithoutParameters(@event.WebPageUrl),
+                        StartNodeXPath = @event.Location.StartNodeXPath,
+                        EndNodeXPath = @event.Location.EndNodeXPath,
                         StartOffset = @event.Location.StartOffset,
                         EndOffset = @event.Location.EndOffset,
                         Wording = @event.Wording
                     });
 
             return Task.Delay(0);
+        }
+
+        private static string PageUrlWithoutParameters(string pageUrl)
+        {
+            var matches = Regex.Matches(pageUrl.ToLower());
+            if (matches.Any()) {
+                return matches.First().Value;
+            }
+            return pageUrl;
         }
     }
 }
