@@ -1,34 +1,22 @@
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CQRSlite.Events;
-using CQRSlite.Messages;
-using StructureMap;
 
 namespace Watson.Infrastructure
 {
     public class StructureMapEventPublisher : IEventPublisher
     {
-        private readonly IContainer _container;
+        private readonly StructureMapEventProjectionFeeder _feeder;
 
-        public StructureMapEventPublisher(IContainer container)
+        public StructureMapEventPublisher(StructureMapEventProjectionFeeder feeder)
         {
-            this._container = container;
+            _feeder = feeder;
         }
 
         public async Task Publish<T>(T @event, CancellationToken cancellationToken) where T : class, IEvent
         {
-            var genericListenerType = typeof(IEventHandler<>);
-            var listenerType = genericListenerType.MakeGenericType(@event.GetType());
-            var listeners = _container.GetAllInstances(listenerType);
-
-            ThreadPool.QueueUserWorkItem(async x =>
-            {
-                foreach (var handler in listeners)
-                {
-                    var onMethod = handler.GetType().GetMethod("Handle");
-                    await (Task)onMethod.Invoke(handler, new object[] { @event });
-                }
+            ThreadPool.QueueUserWorkItem(async x => {
+                await _feeder.Feed(@event);
             });
 
             await Task.Delay(0);

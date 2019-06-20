@@ -12,7 +12,7 @@ namespace Watson.Api
 {
     public class RequestTokenChecker : IRequestStartup {
 
-        private static readonly string[] _publicRoutes = { "/api/login", "/api/register", "api/ping" };
+        private static readonly string[] _publicRoutes = { "/api/login", "/api/register", "/api/ping" };
         private readonly ITokenValidator tokenValidator;
         private readonly ILogger logger;
 
@@ -51,14 +51,35 @@ namespace Watson.Api
         }
 
         private ClaimsPrincipal GetUserFromRequest(Request request) {
-            string token = request.Headers.Authorization;
-            if (string.IsNullOrWhiteSpace(token)) {
+            var authorization = request.Headers.Authorization;
+            if (string.IsNullOrWhiteSpace(authorization)) {
                 return null;
             }
-            return tokenValidator.ValidateUser(token);
+
+            var parts = authorization.Split(' ');
+            if (parts.Length == 1) {
+                return GetUserFromAuthorization("", parts.Single());
+            }
+            else if (parts.Length == 2) {
+                return GetUserFromAuthorization(parts.First(), parts.Last());
+            }
+            else {
+                throw new Exception($"Invalid format of authorization header : {parts.Length} parts");
+            }
         }
 
-        private Response Unauthorized()
+        private ClaimsPrincipal GetUserFromAuthorization(string authorizationType, string token)
+        {
+            switch (authorizationType.ToLower()) {
+                case "":
+                case "bearer":
+                    return tokenValidator.ValidateUser(token);
+                default:
+                    throw new Exception("Only bearer authorization is implemented.");
+            }
+        }
+
+        private static Response Unauthorized()
         {
             return new Response()
                 .WithStatusCode(HttpStatusCode.Unauthorized)

@@ -17,18 +17,21 @@ namespace Watson.Api.ApplicationStartups
 
         private readonly ConsoleLogger logger;
         private readonly EventStoreOrg eventStore;
-        private readonly IEventPublisher eventPublisher;
+        private readonly StructureMapEventPublisher eventPublisher;
+        private readonly StructureMapEventProjectionFeeder projectionFeeder;
         private readonly AppSettings settings;
 
         public LoadEventsStartup(
             ConsoleLogger logger, 
             EventStoreOrg eventStore, 
-            IEventPublisher eventPublisher,
+            StructureMapEventPublisher eventPublisher,
+            StructureMapEventProjectionFeeder projectionFeeder,
             AppSettings settings)
         {
             this.logger = logger;
             this.eventStore = eventStore;
             this.eventPublisher = eventPublisher;
+            this.projectionFeeder = projectionFeeder;
             this.settings = settings;
         }
 
@@ -62,10 +65,8 @@ namespace Watson.Api.ApplicationStartups
             logger.WriteLine(ConsoleColor.DarkYellow, $"* Reading all events from beginning ...");
             var events = await eventStore.ReadAllEventsFromBeginning();
             
-            logger.WriteLine(ConsoleColor.DarkYellow, $"* Publishing {events.Count()} events ...");
-            foreach (var @event in events) {
-                await eventPublisher.Publish(@event);
-            }
+            logger.WriteLine(ConsoleColor.DarkYellow, $"* Publishing {events.Count} events ...");
+            await projectionFeeder.Feed(events);
         }
 
         private Response InterceptRequests(NancyContext context)
