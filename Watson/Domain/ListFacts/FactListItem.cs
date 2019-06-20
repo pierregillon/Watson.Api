@@ -5,6 +5,7 @@ namespace Watson.Domain.ListFacts
     public class FactListItem
     {
         public string WebPageUrl { get; set; }
+        public string PageBaseUrl { get; set; }
         public string Wording { get; set; }
         public string StartNodeXPath { get; set; }
         public string EndNodeXPath { get; set; }

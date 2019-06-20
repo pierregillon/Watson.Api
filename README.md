@@ -19,6 +19,7 @@ No production version yet. Wait for v1.0.
 
 ## In progress
 As a member of the Watson fact checker community, I must be able to
+- [x] List facts when same page but slightly different url (some parameters may differ)
 - [ ] Mark a fact as interesting and further investigation needed
 - [ ] Mark a fact as "not a fact" and must be removed
 - [ ] Link 2 facts
