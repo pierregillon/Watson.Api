@@ -12,7 +12,7 @@ namespace Watson.Api
 {
     public class RequestTokenChecker : IRequestStartup {
 
-        private static readonly string[] _publicRoutes = { "/api/login", "/api/register", "api/ping" };
+        private static readonly string[] _publicRoutes = { "/api/login", "/api/register", "/api/ping" };
         private readonly ITokenValidator tokenValidator;
         private readonly ILogger logger;
 
