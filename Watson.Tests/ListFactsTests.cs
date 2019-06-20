@@ -51,5 +51,31 @@ namespace Watson.Tests
             Assert.Equal("https://www.liberation.fr/politiques/2019/06/18/chasse-aux-chomeurs_1734596&param=1", results.ElementAt(0).WebPageUrl);
             Assert.Equal("https://www.liberation.fr/politiques/2019/06/18/chasse-aux-chomeurs_1734596&param=2", results.ElementAt(1).WebPageUrl);
         }
+
+        [Fact]
+        public async Task skip_facts()
+        {
+            _database.Table<FactListItem>().Add(new FactListItem { Wording="test1", PageBaseUrl = SOME_URL});
+            _database.Table<FactListItem>().Add(new FactListItem { Wording="test2", PageBaseUrl = SOME_URL});
+            _database.Table<FactListItem>().Add(new FactListItem { Wording="test3", PageBaseUrl = SOME_URL});
+
+            var results = await _factFinder.GetAll(SOME_URL, 2);
+
+            Assert.Equal(1, results.Count);
+            Assert.Equal("test3", results.ElementAt(0).Wording);
+        }
+
+        [Fact]
+        public async Task take_facts()
+        {
+            _database.Table<FactListItem>().Add(new FactListItem { Wording = "test1", PageBaseUrl = SOME_URL });
+            _database.Table<FactListItem>().Add(new FactListItem { Wording = "test2", PageBaseUrl = SOME_URL });
+            _database.Table<FactListItem>().Add(new FactListItem { Wording = "test3", PageBaseUrl = SOME_URL });
+
+            var results = await _factFinder.GetAll(SOME_URL, null, 1);
+
+            Assert.Equal(1, results.Count);
+            Assert.Equal("test1", results.ElementAt(0).Wording);
+        }
     }
 }
